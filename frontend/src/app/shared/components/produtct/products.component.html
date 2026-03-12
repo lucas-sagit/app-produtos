@@ -1,0 +1,86 @@
+<div class="form-container">
+  <div class="form-card">
+    <div class="form-header">
+      <h1>Adicionar Produto</h1>
+      <p>Preencha as informações para cadastrar um novo item no estoque</p>
+    </div>
+
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="product-form">
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label for="description">Descrição</label>
+          <input type="text" id="description" formControlName="description" placeholder="Ex: Teclado Mecânico RGB">
+        </div>
+
+        <div class="form-group">
+          <label for="category">Categoria</label>
+          <input type="text" id="category" formControlName="category" placeholder="Eletrônicos">
+        </div>
+
+        <div class="form-group">
+          <label for="lote">Lote</label>
+          <input type="text" id="lote" formControlName="lote" placeholder="LOTE-2024-001">
+        </div>
+
+        <div class="form-group">
+          <label for="price">Preço (R$)</label>
+          <input type="number" id="price" formControlName="price" placeholder="0.00" step="0.01" min="0">
+          @if (formGroup.get('price')?.errors?.['min'] && formGroup.get('price')?.touched) {
+          <small class="error-msg">O preço deve ser maior que 0</small>
+          }
+          @if (formGroup.get('price')?.errors?.['required'] && formGroup.get('price')?.touched) {
+          <small class="error-msg">O preço é obrigatório</small>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="quantity">Quantidade</label>
+          <input type="number" id="quantity" formControlName="quantity" placeholder="0" required>
+        </div>
+
+        <div class="form-group">
+          <label for="stock">Estoque Mínimo</label>
+          <input type="number" id="stock" formControlName="stock" placeholder="0" required>
+        </div>
+
+        <div class="form-group">
+          <label for="image_url">URL da imagem</label>
+          <input type="text" id="image_url" formControlName="image_url" placeholder="https://imagem.com/foto.jpg"
+            required>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="others">Observações</label>
+          <textarea id="others" formControlName="others"
+            placeholder="Detalhes adicionais sobre o produto..."></textarea>
+        </div>
+
+        <div class="form-group full-width total-summary">
+          <div class="summary-line">
+            <span>Valor Unitário:</span>
+            <strong>{{ formGroup.get('price')?.value | currency:'BRL' }}</strong>
+          </div>
+          <div class="summary-line">
+            <span>Quantidade:</span>
+            <strong>{{ formGroup.get('quantity')?.value }}</strong>
+          </div>
+          <div class="summary-line total">
+            <span>Subtotal:</span>
+            <strong>{{ totalValue | currency:'BRL' }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="formGroup.invalid" class="submit-btn">
+          <span>Cadastrar Produto</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
