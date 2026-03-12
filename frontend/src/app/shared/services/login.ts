@@ -6,8 +6,8 @@ import { User } from '../interface/user.interface';
 @Injectable({
   providedIn: 'root',
 })
-export class UserService {
-  private apiUrl = 'http://localhost:8000/api/users';
+export class LoginService {
+  private apiUrl = 'http://localhost:8000/api/login';
 
   constructor(private http: HttpClient) { }
 

@@ -7,13 +7,13 @@ import { User } from '../../interface/user.interface'
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-user.component',
+  selector: 'app-login',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
-  templateUrl: './user.component.html',
-  styleUrl: './user.component.css',
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.css',
 })
-export class UserComponent implements OnInit {
+export class LoginComponent implements OnInit {
 
   userForm!: FormGroup;
   private apiUrl = 'http://localhost:8000/api/users';
