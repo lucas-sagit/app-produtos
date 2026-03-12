@@ -21,20 +21,20 @@ services:
       dockerfile: Dockerfile
     container_name: laravel_app
     working_dir: /app
+    ports:
+      - "8000:8000"
     environment:
       DB_HOST: db
       DB_DATABASE: productsdb
       DB_USERNAME: productuser
       DB_PASSWORD: productpass
       DB_CONNECTION: mysql
-    command: php artisan serve --host=0.0.0.0 --port=8000
-    ports:
-      - "8000:8000"
-    restart: always
     volumes:
       - ./backend/backend:/app
-      - ./backend/backend/vendor:/app/vendor
-      - ./backend/backend/bootstrap/cache:/app/bootstrap/cache
+    command: >
+      sh -c "composer install &&
+        php artisan key:generate &&
+        php artisan serve --host=0.0.0.0 --port=8000"
     depends_on:
       - db
     networks:
