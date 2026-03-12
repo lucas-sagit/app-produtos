@@ -33,8 +33,8 @@ services:
     restart: always
     volumes:
       - ./backend/backend:/app
-      - /app/vendor
-      - /app/bootstrap/cache
+      - ./backend/backend/vendor:/app/vendor
+      - ./backend/backend/bootstrap/cache:/app/bootstrap/cache
     depends_on:
       - db
     networks:
