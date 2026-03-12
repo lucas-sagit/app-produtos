@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { User } from '../../interface/user.interface'
+import { Login } from '../../interface/login.interface';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -15,30 +15,30 @@ import { CommonModule } from '@angular/common';
 })
 export class LoginComponent implements OnInit {
 
-  userForm!: FormGroup;
-  private apiUrl = 'http://localhost:8000/api/users';
+  loginForm!: FormGroup;
+  private apiUrl = 'http://localhost:8000/api/login';
 
 
   constructor(private http: HttpClient, private formBuilder: FormBuilder) { }
 
-  getUser(): Observable<User> {
-    return this.http.get<User>(this.apiUrl);
+  getLogin(): Observable<Login> {
+    return this.http.get<Login>(this.apiUrl);
   }
 
-  createUser(user: User): Observable<User> {
-    return this.http.post<User>(this.apiUrl, user);
+  createLogin(login: Login): Observable<Login> {
+    return this.http.post<Login>(this.apiUrl, login);
   }
 
   ngOnInit(): void {
-    this.userForm = this.formBuilder.group({
+    this.loginForm = this.formBuilder.group({
       cpf: ['', Validators.required],
       password: ['', Validators.required]
     });
   }
 
   onSubmit() {
-    if (this.userForm.valid) {
-      console.log(this.userForm.value);
+    if (this.loginForm.valid) {
+      console.log(this.loginForm.value);
     }
   }
 }

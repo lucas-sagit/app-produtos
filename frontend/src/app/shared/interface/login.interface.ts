@@ -1,4 +1,4 @@
-export interface User {
+export interface Login {
     cpf: string;
     password: string;
 }
