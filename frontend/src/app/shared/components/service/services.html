@@ -1,0 +1,21 @@
+<div class="container">
+  <h2>Serviços</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Descrição</th>
+        <th>Preço</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let service of services">
+        <td>{{ service.id }}</td>
+        <td>{{ service.name }}</td>
+        <td>{{ service.description }}</td>
+        <td>{{ service.price }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

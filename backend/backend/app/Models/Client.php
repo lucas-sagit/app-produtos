@@ -6,5 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Client extends Model
 {
-    //
+    protected $fillable = [
+        'name',
+        'corporate_name',
+        'cpf',
+        'cnpj',
+        'city',
+        'address',
+        'street',
+        'number',
+    ];
+
+    protected $hidden = [
+        'password',
+    ];
 }

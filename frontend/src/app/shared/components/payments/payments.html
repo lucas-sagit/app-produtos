@@ -1,0 +1,21 @@
+<div class="container">
+  <h2>Pagamentos</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Valor</th>
+        <th>Descrição</th>
+        <th>Cliente ID</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let payment of payments">
+        <td>{{ payment.id }}</td>
+        <td>{{ payment.amount }}</td>
+        <td>{{ payment.description }}</td>
+        <td>{{ payment.client_id }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
-            $table->string('plans')->varchar(255);
-            $table->string('description')->varchar(255);
+            $table->foreignId('client_id')->constrained('clients');
+            $table->foreignId('payment_id')->constrained('payment');
+            $table->string('plans', 255);
+            $table->string('description', 255);
             $table->decimal('price', 10, 2);
             $table->timestamps();
         });
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('services');
     }
 };

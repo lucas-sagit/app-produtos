@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('payment', function (Blueprint $table) {
             $table->id();
             $table->foreignId('client_id')->constrained('clients');
-            $table->decimal('cash', 10, 2);
-            $table->string('status')->default('pendente');
+            $table->string('description', 255)->nullable();
+            $table->decimal('cash', 10, 2)->nullable();
+            $table->boolean('status')->default(false);
             $table->timestamp('payment_date')->nullable();
             $table->timestamps();
         });
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('payment');
     }
 };

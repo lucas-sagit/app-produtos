@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('client', function (Blueprint $table) {
             $table->id()->primary();
-            $table->bigIncrements('id');
             $table->string('name')->varchar(255);
+            $table->string('phone')->varchar(255);
             $table->string('corporate_name')->varchar(255);
             $table->string('cpf')->unique();
             $table->string('cnpj')->unique();
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('client');
     }
 };

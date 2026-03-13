@@ -1,4 +1,4 @@
-.userForm {
+.loginForm {
     max-width: 400px;
     margin: 40px auto;
     padding: 20px;
@@ -8,15 +8,15 @@
     font-family: Arial, sans-serif;
 }
 
-.userForm label {
+.loginForm label {
     display: block;
     margin-bottom: 6px;
     font-weight: bold;
     color: #333;
 }
 
-.userForm input[type="text"],
-.userForm input[type="password"] {
+.loginForm input[type="text"],
+.loginForm input[type="password"] {
     width: 100%;
     padding: 10px;
     margin-bottom: 12px;
@@ -26,8 +26,8 @@
     transition: border-color 0.3s;
 }
 
-.userForm input[type="text"]:focus,
-.userForm input[type="password"]:focus {
+.loginForm input[type="text"]:focus,
+.loginForm input[type="password"]:focus {
     border-color: #0078d7;
     outline: none;
 }
