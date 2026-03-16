@@ -8,7 +8,7 @@ import { PaymentsComponent } from './shared/components/payments/payments';
 import { ServicesComponent } from './shared/components/service/services';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'dashboard', component: Dashboard },
   { path: 'clientes', component: ClientsComponent },
   { path: 'pagamentos', component: PaymentsComponent },

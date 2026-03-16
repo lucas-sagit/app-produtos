@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Login } from '../../interface/login.interface';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,7 @@ export class LoginComponent implements OnInit {
   private apiUrl = 'http://localhost:8000/api/login';
 
 
-  constructor(private http: HttpClient, private formBuilder: FormBuilder) { }
+  constructor(private http: HttpClient, private formBuilder: FormBuilder, private router: Router) { }
 
   getLogin(): Observable<Login> {
     return this.http.get<Login>(this.apiUrl);
@@ -38,7 +39,19 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      console.log(this.loginForm.value);
+      const loginData = this.loginForm.value;
+
+      this.createLogin(loginData).subscribe(response => {
+        console.log('Login feito com sucesso:', response);
+
+        localStorage.setItem('token', response.token || '');
+
+        this.router.navigate(['/dashboard'])}, error => {
+          console.error('Erro ao fazer login:', error);
+          error('Login falhou. Por favor, verifique suas credenciais e tente novamente.');
+        }
+      );
+
     }
   }
 }
