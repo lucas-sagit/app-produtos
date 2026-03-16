@@ -22,14 +22,6 @@ export class LoginComponent implements OnInit {
 
   constructor(private http: HttpClient, private formBuilder: FormBuilder, private router: Router) { }
 
-  getLogin(): Observable<Login> {
-    return this.http.get<Login>(this.apiUrl);
-  }
-
-  createLogin(login: Login): Observable<Login> {
-    return this.http.post<Login>(this.apiUrl, login);
-  }
-
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
       cpf: ['', Validators.required],
@@ -37,21 +29,32 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  onSubmit() {
-    if (this.loginForm.valid) {
-      const loginData = this.loginForm.value;
+  createLogin(login: Login): Observable<Login> {
+    return this.http.post<Login>(this.apiUrl, login);
+  }
 
-      this.createLogin(loginData).subscribe(response => {
+    onSubmit() {
+    if (this.loginForm.invalid) {
+      return;
+    }
+
+    const loginData = this.loginForm.value;
+    console.log(loginData);
+
+    this.createLogin(loginData).subscribe({
+      next: (response) => {
         console.log('Login feito com sucesso:', response);
 
-        localStorage.setItem('token', response.token || '');
-
-        this.router.navigate(['/dashboard'])}, error => {
-          console.error('Erro ao fazer login:', error);
-          error('Login falhou. Por favor, verifique suas credenciais e tente novamente.');
+        if (response.token) {
+          localStorage.setItem('token', response.token);
         }
-      );
+        this.router.navigate(['/dashboard']);
+      },
 
-    }
+      error: (err) => {
+        console.error('Erro ao fazer login:', err);
+        alert('Login falhou. Verifique CPF e senha.');
+      }
+    });
   }
 }

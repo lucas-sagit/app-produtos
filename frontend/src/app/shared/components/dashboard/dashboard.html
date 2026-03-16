@@ -1,21 +1,14 @@
-<div class="dashboard-container">
-  <header class="header">
-    <h1>Painel de Gerenciamento de Produtos</h1>
-  </header>
-  <div class="content">
-    <div class="summary-cards">
-      <div class="card">
-        <h3>Total de Clientes</h3>
-        <p>{{ totalClients }}</p>
-      </div>
-      <div class="card">
-        <h3>Total de Pagamentos</h3>
-        <p>{{ totalPayments }}</p>
-      </div>
-      <div class="card">
-        <h3>Total de Serviços</h3>
-        <p>{{ totalServices }}</p>
-      </div>
-    </div>
-  </div>
+<div class="app-container">
+  <aside class="sidebar">
+    <nav>
+      <ul>
+        <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
+        <li><a routerLink="/clientes" routerLinkActive="active">Clientes</a></li>
+        <li><a routerLink="/pagamentos" routerLinkActive="active">Pagamentos</a></li>
+        <li><a routerLink="/servicos" routerLinkActive="active">Serviços</a></li>
+      </ul>
+    </nav>
+  </aside>
+  <main class="main-content">
+  </main>
 </div>

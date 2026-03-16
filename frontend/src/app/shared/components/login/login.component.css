@@ -1,63 +1,108 @@
+/* Fundo da página */
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  /* centraliza horizontal */
+  align-items: center;
+  /* centraliza vertical */
+  background: #f0f2f5;
+
+}
+
+/* Card de login */
 .loginForm {
-    max-width: 400px;
-    margin: 40px auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+  padding-top: 40px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
+/* Título */
+.loginForm h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #1e3c72;
+}
+
+/* Labels */
 .loginForm label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: bold;
-    color: #333;
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #444;
+  font-size: 14px;
 }
 
+/* Inputs */
 .loginForm input[type="text"],
 .loginForm input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 14px;
-    transition: border-color 0.3s;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.25s ease;
+  background-color: #f7f9fc;
 }
 
-.loginForm input[type="text"]:focus,
-.loginForm input[type="password"]:focus {
-    border-color: #0078d7;
-    outline: none;
+.loginForm input:focus {
+  border-color: #2a5298;
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(42, 82, 152, 0.15);
+  outline: none;
 }
 
+/* Mensagem de erro */
 .error-msg {
-    color: #d9534f;
-    font-size: 12px;
-    margin-top: -8px;
-    margin-bottom: 10px;
-    display: block;
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: -10px;
+  margin-bottom: 12px;
 }
 
+/* Botão */
 .buttonSubmit {
-    width: 100%;
-    padding: 12px;
-    background-color: #0078d7;
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.buttonSubmit:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #2a5298, #1e3c72);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .buttonSubmit:hover:not(:disabled) {
-    background-color: #005fa3;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.buttonSubmit:disabled {
+  background: #bfc5d2;
+  cursor: not-allowed;
+}
+
+/* Animação */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

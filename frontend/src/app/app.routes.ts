@@ -6,14 +6,17 @@ import { Dashboard } from './shared/components/dashboard/dashboard';
 import { ClientsComponent } from './shared/components/clients/clients';
 import { PaymentsComponent } from './shared/components/payments/payments';
 import { ServicesComponent } from './shared/components/service/services';
+import { AuthGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'dashboard', component: Dashboard },
-  { path: 'clientes', component: ClientsComponent },
-  { path: 'pagamentos', component: PaymentsComponent },
-  { path: 'servicos', component: ServicesComponent },
-  { path: 'products', component: ProductsComponent },
-  { path: 'list', component: ListComponent },
-  { path: 'login', component: LoginComponent }
+
+  { path: 'login', component: LoginComponent},
+
+  { path: 'dashboard', component: Dashboard, canActivate: [AuthGuard] },
+  { path: 'clientes', component: ClientsComponent, canActivate: [AuthGuard] },
+  { path: 'pagamentos', component: PaymentsComponent, canActivate: [AuthGuard] },
+  { path: 'servicos', component: ServicesComponent, canActivate: [AuthGuard] },
+  { path: 'products', component: ProductsComponent, canActivate: [AuthGuard] },
+  { path: 'list', component: ListComponent, canActivate: [AuthGuard] }
 ];
