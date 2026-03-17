@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id()->primary();
+            $table->inactive()->boolean()->default(false);
             $table->string('name')->varchar(255);
             $table->string('phone')->varchar(255);
             $table->string('corporate_name')->varchar(255);

@@ -1,0 +1,26 @@
+<h2>{{ isEdit ? 'Editar Cliente' : 'Novo Cliente' }}</h2>
+
+<form [formGroup]="form">
+
+  <input formControlName="name" placeholder="Nome">
+  <input formControlName="corporate_name" placeholder="Nome da Empresa">
+  <input formControlName="cpf" placeholder="CPF">
+  <input formControlName="cnpj" placeholder="CNPJ">
+  <input formControlName="phone" placeholder="Telefone">
+  <input formControlName="city" placeholder="Cidade">
+  <input formControlName="address" placeholder="Endereço">
+  <input formControlName="street" placeholder="Rua">
+  <input formControlName="number" placeholder="Número">
+
+  <label>
+    <input type="checkbox" formControlName="active">
+    Ativo
+  </label>
+
+  <button (click)="save()">
+    {{ isEdit ? 'Atualizar' : 'Salvar' }}
+  </button>
+
+  <button (click)="close()">Cancelar</button>
+
+</form>

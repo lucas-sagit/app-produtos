@@ -1,5 +1,9 @@
 <div class="container">
   <div class="header">
+    <div class="button_add" (click)="openCreateDialog()">
+      <p>Add</p>
+      <mat-icon>add</mat-icon>
+    </div>
     <app-go-back></app-go-back>
     <h2>Clientes</h2>
   </div>
@@ -8,7 +12,8 @@
       <tr>
         <th>ID</th>
         <th>Nome</th>
-        <th>Email</th>
+        <th>CPF</th>
+        <th>CNPJ</th>
         <th>Telefone</th>
       </tr>
     </thead>
@@ -16,7 +21,8 @@
       <tr *ngFor="let client of clients">
         <td>{{ client.id }}</td>
         <td>{{ client.name }}</td>
-        <td>{{ client.email }}</td>
+        <td>{{ client.cpf }}</td>
+        <td>{{ client.cnpj }}</td>
         <td>{{ client.phone }}</td>
       </tr>
     </tbody>
