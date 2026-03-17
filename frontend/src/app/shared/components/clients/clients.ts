@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClientService } from '../../../services/client.service';
 import { Client } from '../../../models/client';
+import { GoBack } from '../go_Back/goBack';
 
 @Component({
   selector: 'app-clients',
-  imports: [CommonModule],
+  imports: [CommonModule, GoBack],
   standalone: true,
   templateUrl: './clients.html',
   styleUrl: './clients.css',
@@ -20,6 +21,12 @@ export class ClientsComponent implements OnInit {
   }
 
   loadClients(): void {
-    this.clientService.getClients().subscribe(data => this.clients = data);
+    this.clientService.getClients().subscribe({
+      next: (data) => this.clients = data,
+      error: (err) => {
+        console.error('Erro ao buscar clientes:', err);
+        this.clients = [];
+      }
+    });
   }
 }

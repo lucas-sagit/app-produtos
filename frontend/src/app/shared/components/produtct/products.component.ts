@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../../services/product/product';
 import { Product } from '../../interface/product.interface';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-
 import { CommonModule } from '@angular/common';
+import { GoBack } from '../go_Back/goBack';
 
 @Component({
   selector: 'app-products-component',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, GoBack],
   standalone: true,
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',

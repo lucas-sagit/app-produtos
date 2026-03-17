@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Client extends Model
 {
+    protected $table = 'clients';
+
     protected $fillable = [
         'name',
         'corporate_name',
@@ -15,6 +17,7 @@ class Client extends Model
         'address',
         'street',
         'number',
+        'phone',
     ];
 
     protected $hidden = [

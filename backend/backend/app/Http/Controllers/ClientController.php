@@ -12,7 +12,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Client::all());
     }
 
     /**
@@ -53,7 +53,8 @@ class ClientController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $client = Client::findOrFail($id);
+        return response()->json($client);
     }
 
     /**

@@ -7,7 +7,7 @@ import { Client } from '../models/client';
   providedIn: 'root'
 })
 export class ClientService {
-  private apiUrl = 'http://localhost:8000/api/clients'; // Ajuste conforme necessário
+  private apiUrl = 'http://localhost:8000/api/clients';
 
   constructor(private http: HttpClient) { }
 
@@ -18,6 +18,4 @@ export class ClientService {
   createClient(client: Client): Observable<Client> {
     return this.http.post<Client>(this.apiUrl, client);
   }
-
-  // Outros métodos como update, delete podem ser adicionados
 }

@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product/product';
 import { Product } from '../../interface/product.interface';
+import { GoBack } from '../go_Back/goBack';
 
 @Component({
   selector: 'app-list-component',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, GoBack],
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css'],
 })

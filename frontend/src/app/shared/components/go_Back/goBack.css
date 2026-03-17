@@ -1,0 +1,27 @@
+/* go-back.component.css */
+.goBack {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #3012cb;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(4px);
+}
+
+.goBack:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: translateX(-3px);
+}
+
+.goBack::before {
+  content: '←';
+  font-size: 18px;
+  font-weight: 600;
+}

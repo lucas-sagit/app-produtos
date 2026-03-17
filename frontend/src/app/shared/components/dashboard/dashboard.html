@@ -1,14 +1,50 @@
 <div class="app-container">
   <aside class="sidebar">
+    <h2>App</h2>
     <nav>
       <ul>
         <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
         <li><a routerLink="/clientes" routerLinkActive="active">Clientes</a></li>
         <li><a routerLink="/pagamentos" routerLinkActive="active">Pagamentos</a></li>
         <li><a routerLink="/servicos" routerLinkActive="active">Serviços</a></li>
+        <li><a routerLink="/productsproductsproductsproducts" routerLinkActive="active">Produtos</a></li>
+        <li><a routerLink="/list" routerLinkActive="active">Estoque</a></li>
       </ul>
     </nav>
   </aside>
   <main class="main-content">
+    <div class="dashboard-header">
+      <p>Visão geral do sistema</p>
+    </div>
+    <div class="dashboard-grid">
+      <div class="card card-clients">
+        <div class="card-icon">👥</div>
+        <div class="card-content">
+          <h3>Clientes</h3>
+          <p class="total">{{ totalClients }}</p>
+        </div>
+      </div>
+      <div class="card card-payments">
+        <div class="card-icon">💳</div>
+        <div class="card-content">
+          <h3>Pagamentos</h3>
+          <p class="total">{{ totalPayments }}</p>
+        </div>
+      </div>
+      <div class="card card-services">
+        <div class="card-icon">🛠️</div>
+        <div class="card-content">
+          <h3>Serviços</h3>
+          <p class="total">{{ totalServices }}</p>
+        </div>
+      </div>
+      <div class="card card-products">
+        <div class="card-icon">📦</div>
+        <div class="card-content">
+          <h3>Produtos</h3>
+          <p class="total">{{ totalProducts }}</p>
+        </div>
+      </div>
+    </div>
   </main>
 </div>

@@ -14,7 +14,7 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Payment::all());
     }
 
     /**
@@ -35,7 +35,7 @@ class PaymentController extends Controller
             'payment_date' => 'required|date',
         ]);
 
-        $payment = payment::create($validated);
+        $payment = Payment::create($validated);
 
         return response()->json([
             'message' => 'Pagamento realizado com sucesso',
@@ -48,7 +48,7 @@ class PaymentController extends Controller
      */
     public function show(string $id)
     {
-        $payment = Payment::with('client')->findOrFail($id);
+        $payment = Payment::findOrFail($id);
         return response()->json($payment);
     }
 
@@ -89,9 +89,8 @@ class PaymentController extends Controller
     {
         Payment::destroy($id);
 
-
         return response()->json([
-            'message' => 'pagamento deletado com sucesso!'
+            'message' => 'Pagamento deletado com sucesso!'
         ]);
     }
 }

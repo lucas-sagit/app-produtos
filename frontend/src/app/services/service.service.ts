@@ -7,7 +7,7 @@ import { Service } from '../models/service';
   providedIn: 'root'
 })
 export class ServiceService {
-  private apiUrl = 'http://localhost:8000/api/services'; // Ajuste conforme necessário
+  private apiUrl = 'http://localhost:8000/api/services';
 
   constructor(private http: HttpClient) { }
 
@@ -18,6 +18,4 @@ export class ServiceService {
   createService(service: Service): Observable<Service> {
     return this.http.post<Service>(this.apiUrl, service);
   }
-
-  // Outros métodos
 }

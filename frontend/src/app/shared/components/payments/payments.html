@@ -1,5 +1,8 @@
 <div class="container">
-  <h2>Pagamentos</h2>
+  <div class="header">
+    <app-go-back></app-go-back>
+    <h2>Pagamentos</h2>
+  </div>
   <table class="table">
     <thead>
       <tr>
@@ -7,14 +10,18 @@
         <th>Valor</th>
         <th>Descrição</th>
         <th>Cliente ID</th>
+        <th>Status</th>
+        <th>Data</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let payment of payments">
         <td>{{ payment.id }}</td>
-        <td>{{ payment.amount }}</td>
+        <td>{{ payment.cash | currency:'BRL' }}</td>
         <td>{{ payment.description }}</td>
         <td>{{ payment.client_id }}</td>
+        <td>{{ payment.status ? 'Pago' : 'Pendente' }}</td>
+        <td>{{ payment.payment_date | date:'dd/MM/yyyy' }}</td>
       </tr>
     </tbody>
   </table>

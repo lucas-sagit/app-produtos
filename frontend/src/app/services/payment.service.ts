@@ -7,7 +7,7 @@ import { Payment } from '../models/payment';
   providedIn: 'root'
 })
 export class PaymentService {
-  private apiUrl = 'http://localhost:8000/api/payments'; // Ajuste conforme necessário
+  private apiUrl = 'http://localhost:8000/api/payments';
 
   constructor(private http: HttpClient) { }
 
@@ -18,6 +18,4 @@ export class PaymentService {
   createPayment(payment: Payment): Observable<Payment> {
     return this.http.post<Payment>(this.apiUrl, payment);
   }
-
-  // Outros métodos
 }
