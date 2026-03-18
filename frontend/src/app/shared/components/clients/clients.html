@@ -1,20 +1,30 @@
-<div class="container">
-  <div class="header">
-    <div class="button_add" (click)="openCreateDialog()">
-      <p>Add</p>
-      <mat-icon>add</mat-icon>
-    </div>
-    <app-go-back></app-go-back>
-    <h2>Clientes</h2>
+<div class="title">
+
+  <h2>Clientes</h2>
+</div>
+
+<div class="header">
+  <app-go-back></app-go-back>
+
+  <div class="button_add" (click)="openCreateDialog()">
+    <mat-icon> add</mat-icon>
   </div>
+
+</div>
+
   <table class="table">
     <thead>
       <tr>
         <th>ID</th>
         <th>Nome</th>
         <th>CPF</th>
-        <th>CNPJ</th>
         <th>Telefone</th>
+        <th>CNPJ</th>
+        <th>Razão Social</th>
+        <th>Cidade</th>
+        <th>Endereço</th>
+        <th>Rua</th>
+        <th>Nº</th>
       </tr>
     </thead>
     <tbody>
@@ -24,7 +34,11 @@
         <td>{{ client.cpf }}</td>
         <td>{{ client.cnpj }}</td>
         <td>{{ client.phone }}</td>
+        <td>{{ client.corporate_name }}</td>
+        <td>{{ client.city }}</td>
+        <td>{{ client.address }}</td>
+        <td>{{ client.street }}</td>
+        <td>{{ client.number }}</td>
       </tr>
     </tbody>
   </table>
-</div>

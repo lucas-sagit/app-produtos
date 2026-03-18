@@ -29,8 +29,10 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'status_client' => 'boolean',
             'name' => 'required|string',
             'corporate_name' => 'nullable|string',
+            'phone' => 'required|string',
             'cpf' => 'nullable|string|unique:clients,cpf',
             'cnpj' => 'nullable|string|unique:clients,cnpj',
             'city' => 'required|string',

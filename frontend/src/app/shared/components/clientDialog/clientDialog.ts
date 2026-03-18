@@ -7,7 +7,9 @@ import { CommonModule } from '@angular/common';
   selector: 'app-client-dialog',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './client-dialog.html'
+  templateUrl: './clientDialog.html',
+  styleUrl: './clientDialog.css',
+
 })
 export class ClientDialogComponent {
   form: FormGroup;
@@ -22,7 +24,14 @@ export class ClientDialogComponent {
 
     this.form = this.fb.group({
       name: [data?.name || '', Validators.required],
-      email: [data?.email || '', Validators.required],
+      corporate_name: [data?.corporate_name || '', Validators.required],
+      cnpj: [data?.CNPJ || '', Validators.required],
+      cpf: [data?.CPF || '', Validators.required],
+      phone: [data?.phone || '', Validators.required],
+      city: [data?.city || '', Validators.required],
+      address: [data?.address || '', Validators.required],
+      street: [data?.street || '', Validators.required],
+      number: [data?.number || '', Validators.required],
       active: [data?.active ?? true]
     });
   }

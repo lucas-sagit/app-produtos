@@ -1,5 +1,6 @@
 export interface Client {
   id: number;
+  status_client: boolean;
   name: string;
   phone?: string;
   corporate_name?: string;
