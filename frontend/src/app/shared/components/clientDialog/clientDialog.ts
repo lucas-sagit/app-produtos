@@ -36,6 +36,11 @@ export class ClientDialogComponent {
     });
   }
 
+  ngOnInit(){
+    if(this.data) {
+      this.form.patchValue(this.data);}
+  }
+
   save() {
     if (this.form.valid) {
       this.dialogRef.close(this.form.value);
