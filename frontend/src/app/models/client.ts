@@ -1,6 +1,6 @@
 export interface Client {
   id: number;
-  inactive: boolean;
+  status_client: boolean;
   name: string;
   cpf: string;
   cnpj?: string;

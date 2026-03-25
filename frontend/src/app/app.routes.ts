@@ -11,8 +11,8 @@ import { GoBack } from './shared/components/go_Back/goBack';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent, data: { hideGoBack: true} },
-  { path: 'dashboard', component: Dashboard, canActivate: [AuthGuard], data: { hideGoBack: true} },
+  { path: 'login', component: LoginComponent },
+  { path: 'dashboard', component: Dashboard, canActivate: [AuthGuard] },
 
   { path: 'clientes', component: ClientsComponent, canActivate: [AuthGuard] },
   { path: 'pagamentos', component: PaymentsComponent, canActivate: [AuthGuard] },

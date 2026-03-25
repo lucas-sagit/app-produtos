@@ -2,25 +2,40 @@
 
 <form [formGroup]="form">
 
-  <input formControlName="name" placeholder="Nome">
-  <input formControlName="corporate_name" placeholder="Nome da Empresa">
-  <input formControlName="cpf" placeholder="CPF">
-  <input formControlName="cnpj" placeholder="CNPJ">
-  <input formControlName="phone" placeholder="Telefone">
-  <input formControlName="city" placeholder="Cidade">
-  <input formControlName="address" placeholder="Endereço">
-  <input formControlName="street" placeholder="Rua">
-  <input formControlName="number" placeholder="Número">
+  <input formControlName="name" placeholder="Nome" type="text">
+  <input formControlName="corporate_name" placeholder="Razão Social" type="text">
+  <input formControlName="cpf" placeholder="CPF" type="text">
+  <input formControlName="cnpj" placeholder="CNPJ" type="text">
+  <input formControlName="phone" placeholder="Telefone" type="text">
+  <input formControlName="city" placeholder="Cidade" type="text">
+  <input formControlName="address" placeholder="Endereço" type="text">
+  <input formControlName="street" placeholder="Rua" type="text">
+  <input formControlName="number" placeholder="Número" type="text">
 
   <label>
-    <input type="checkbox" formControlName="active">
+    <input type="checkbox" formControlName="status_client">
     Ativo
   </label>
 
-  <button (click)="save()">
-    {{ isEdit ? 'Atualizar' : 'Salvar' }}
-  </button>
+  <div class="actions">
+    <button type="button" (click)="save()">
+      {{ isEdit ? 'Atualizar' : 'Salvar' }}
+    </button>
 
-  <button (click)="close()">Cancelar</button>
+    <button type="button" (click)="close()">Cancelar</button>
+  </div>
+
+  <div *ngIf="form.invalid" style="color: red; margin-top: 10px;">
+    Formulário inválido! Campos obrigatórios:
+    <ul>
+      <li *ngIf="form.get('name')?.invalid">Nome</li>
+      <li *ngIf="form.get('phone')?.invalid">Telefone</li>
+      <li *ngIf="form.get('city')?.invalid">Cidade</li>
+      <li *ngIf="form.get('address')?.invalid">Endereço</li>
+      <li *ngIf="form.get('street')?.invalid">Rua</li>
+      <li *ngIf="form.get('number')?.invalid">Número</li>
+    </ul>
+  </div>
 
 </form>
+

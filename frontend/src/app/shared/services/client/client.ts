@@ -17,11 +17,11 @@ export class Client {
     return this.http.get<any[]>(this.Url);
   }
 
-  updateClient(id: number, client: any) {
+  updateClients(id: number, client: any) {
     return this.http.put<any>(`${this.Url}/${id}`, client);
   }
 
-  deleteClient(id: number) {
+  deleteClients(id: number) {
     return this.http.delete<any>(`${this.Url}/${id}`);
   }
 }

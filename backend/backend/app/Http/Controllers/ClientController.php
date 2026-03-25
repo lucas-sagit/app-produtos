@@ -73,6 +73,7 @@ class ClientController extends Controller
     public function update(Request $request, string $id)
     {
         $validated = $request->validate([
+            'status_client' => 'boolean',
             'name' => 'required|string',
             'corporate_name' => 'nullable|string',
             'cpf' => 'nullable|string|unique:clients,cpf,' . $id,

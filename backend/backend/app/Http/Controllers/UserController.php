@@ -2,24 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class userController extends Controller
 {
     public function authentication(Request $request)
     {
-        $credentials = [
-            'cpf' => $request->cpf,
-            'password' => $request->password,
-        ];
+     $User  = User::where('cpf', $request->cpf)->first();
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            return response()->json($user);
-        } else {
-            return response()->json(['message' => 'Usuário não encontrado'], 401);
-        }
+     if(!$User || !Hash::check($request->getPassword, $User->password)){
+        return response()->json([
+            'message' => 'usuário ou senha inválidos'
+        ], 401);
+     }
+     return response()->json($User);
     }
 }
 

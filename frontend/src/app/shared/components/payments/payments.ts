@@ -20,13 +20,25 @@ export class PaymentsComponent implements OnInit {
     this.loadPayments();
   }
 
-  loadPayments(): void {
+  loadPayments() {
     this.paymentService.getPayments().subscribe({
-      next: (data) => this.payments = data,
-      error: (err) => {
-        console.error('Erro ao buscar pagamentos:', err);
-        this.payments = [];
-      }
+      next:(data) => this.payments = data,
+      error:(err) => console.error(err)
     });
+  }
+
+  pay(id: number){
+    this.paymentService.pay(id).subscribe(()=>{
+      this.loadPayments();
+    });
+  }
+
+  getStatusLabel(status: string){
+    switch(status){
+      case 'pending': return 'Pendente';
+      case 'paid': return 'Pago';
+      case 'late': return 'Atrasado';
+      default: return status;
+    }
   }
 }

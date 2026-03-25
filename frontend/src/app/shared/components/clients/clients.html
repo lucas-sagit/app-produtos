@@ -6,6 +6,11 @@
 <div class="header">
   <app-go-back></app-go-back>
 
+  <div class="search-container" style="display: flex; gap: 10px;">
+    <input type="text" [(ngModel)]="searchName" placeholder="Buscar por nome" style="padding: 5px; border-radius: 4px; border: 1px solid #ccc;">
+    <button (click)="searchByName()" style="padding: 5px 10px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px;">Pesquisar</button>
+  </div>
+
   <div class="button_add" (click)="openCreateDialog()">
     <mat-icon> add</mat-icon>
   </div>
@@ -18,17 +23,18 @@
         <th>ID</th>
         <th>Nome</th>
         <th>CPF</th>
-        <th>Telefone</th>
         <th>CNPJ</th>
+        <th>Telefone</th>
         <th>Razão Social</th>
         <th>Cidade</th>
         <th>Endereço</th>
         <th>Rua</th>
         <th>Nº</th>
+        <th>Ações</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let client of clients">
+      <tr *ngFor="let client of filteredClients">
         <td>{{ client.id }}</td>
         <td>{{ client.name }}</td>
         <td>{{ client.cpf }}</td>
@@ -39,6 +45,9 @@
         <td>{{ client.address }}</td>
         <td>{{ client.street }}</td>
         <td>{{ client.number }}</td>
+        <td>
+          <button (click)="openEditDialog(client)" style="padding: 5px 10px; cursor: pointer; background: #28a745; color: white; border: none; border-radius: 4px;">Atualizar</button>
+        </td>
       </tr>
     </tbody>
   </table>

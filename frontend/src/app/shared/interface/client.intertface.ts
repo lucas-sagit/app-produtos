@@ -1,13 +1,19 @@
+import { Service } from "../services/servico/service";
+
 export interface Client {
   id: number;
   status_client: boolean;
   name: string;
-  phone?: string;
-  corporate_name?: string;
-  cpf?: string;
+  cpf: string;
   cnpj?: string;
+  corporate_name?: string;
+  phone?: string;
   city?: string;
-  address?: string;
-  street?: string;
   number?: string;
+  street?: string;
+  address?: string;
+  created_at?: string;
+  updated_at?: string;
+
+  services?: Service[];
 }

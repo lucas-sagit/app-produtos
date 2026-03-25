@@ -1,10 +1,13 @@
 export interface Payment {
   id: number;
-  cash: number;
-  description: string;
   client_id: number;
-  status?: boolean;
-  payment_date?: string;
-  created_at?: string;
-  updated_at?: string;
+  plans: string;
+  description: string;
+  amount: number;
+  due_date: Date;
+  status: 'pending' | 'paid' | 'late';
+  paid_at: string;
+  started_at: string;
+
+  payments?: Payment[];
 }

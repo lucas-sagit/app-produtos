@@ -38,3 +38,7 @@
 .table tr:hover {
   background: #f5f5f5;
 }
+
+.pending { color: orange; }
+.paid { color: green; }
+.late { color: red; }

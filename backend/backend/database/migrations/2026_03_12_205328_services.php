@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('client_id')->constrained('clients');
             $table->foreignId('payment_id')->constrained('payment');
+            $table->date('due_date');
             $table->string('plans', 255);
             $table->string('description', 255);
             $table->decimal('price', 10, 2);
+            $table->string('status');
             $table->timestamps();
         });
     }

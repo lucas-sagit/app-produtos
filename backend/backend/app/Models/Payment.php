@@ -9,24 +9,22 @@ class Payment extends Model
 {
     use HasFactory;
 
-    protected $table = 'payment';
-
     protected $fillable = [
-        'client_id',
-        'description',
-        'cash',
-        'status',
-        'payment_date',
+       'service_id',
+       'amount',
+       'due_date',
+       'paid_it',
+       'status'
     ];
 
     protected $casts = [
-        'cash' => 'decimal:2',
-        'status' => 'boolean',
-        'payment_date' => 'datetime',
+        'amount' => 'decimal:2',
+        'due_date' => 'date',
+        'paid_at' => 'datetime',
     ];
 
-    public function client()
+    public function service()
     {
-        return $this->belongsTo(Client::class, 'client_id');
+        return $this->belongsTo(Service::class);
     }
 }

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Service;
+use App\Models\Payment;
+use Carbon\Carbon;
+
 
 class ServiceController extends Controller
 {
@@ -12,7 +15,7 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        return response()->json(Service::all());
+        return response()->json(Service::with('client')->get());
     }
 
     /**
@@ -30,13 +33,30 @@ class ServiceController extends Controller
     {
         $validated = $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'payment_id' => 'nullable|exists:payments,id',
+            // 'payment_id' => 'nullable|exists:payments,id',
+            'due_day'=> 'required|integer|min:1|max:31',
             'plans' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'price' => 'required|numeric',
+            'started_at' => 'required|date',
+            'status' => 'required|in:ativo,suspenso,cancelado',
         ]);
 
+
         $service = Service::create($validated);
+
+        $due_date = Carbon::now()->day($service->due_day);
+
+        if($due_date < now()){
+            $due_date = $due_date->addMonth();
+        }
+
+        Payment::create([
+            'service_id' => $service->id,
+            'amount' => $service->price,
+            'due_date' => $service->$due_date,
+            'status' => 'pending'
+        ]);
 
         return response()->json([
             'message' => 'Serviço criado com sucesso',
@@ -72,6 +92,7 @@ class ServiceController extends Controller
             'plans' => 'string|max:255',
             'description' => 'string|max:255',
             'price' => 'numeric',
+            'status' => 'in:ativo, suspenso, cancelado'
         ]);
 
         $service->update($validated);

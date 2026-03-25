@@ -11,9 +11,11 @@ class Service extends Model
     protected $fillable = [
         'client_id',
         'payment_id',
+        'due_date', //data de vencimento
         'plans',
         'description',
         'price',
+        'status'
     ];
 
     protected $casts = [

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GoBack } from './go-back';
+import { GoBack } from './goBack';
 
 describe('GoBack', () => {
   let component: GoBack;

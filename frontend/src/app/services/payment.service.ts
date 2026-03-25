@@ -18,4 +18,8 @@ export class PaymentService {
   createPayment(payment: Payment): Observable<Payment> {
     return this.http.post<Payment>(this.apiUrl, payment);
   }
+
+  pay(id: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/$(id)/pay`, {});
+  }
 }

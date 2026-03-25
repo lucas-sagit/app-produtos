@@ -23,22 +23,17 @@ export class ClientDialogComponent {
     this.isEdit = !!data;
 
     this.form = this.fb.group({
-      name: [data?.name || '', Validators.required],
-      corporate_name: [data?.corporate_name || '', Validators.required],
-      cnpj: [data?.CNPJ || '', Validators.required],
-      cpf: [data?.CPF || '', Validators.required],
-      phone: [data?.phone || '', Validators.required],
-      city: [data?.city || '', Validators.required],
-      address: [data?.address || '', Validators.required],
-      street: [data?.street || '', Validators.required],
-      number: [data?.number || '', Validators.required],
-      active: [data?.active ?? true]
+      name: [data?.name || ''],
+      corporate_name: [data?.corporate_name || ''],
+      cnpj: [data?.cnpj || ''],
+      cpf: [data?.cpf || ''],
+      phone: [data?.phone || ''],
+      city: [data?.city || ''],
+      address: [data?.address || ''],
+      street: [data?.street || ''],
+      number: [data?.number || ''],
+      status_client: [data?.status_client ?? true]
     });
-  }
-
-  ngOnInit(){
-    if(this.data) {
-      this.form.patchValue(this.data);}
   }
 
   save() {

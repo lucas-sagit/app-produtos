@@ -11,15 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payment', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('client_id')->constrained()->cascadeOnDelete();
-            $table->string('description', 255)->nullable();
-            $table->decimal('cash', 10, 2)->nullable();
-            $table->boolean('status')->default(false);
-            $table->timestamp('payment_date')->nullable();
+            $table->foreignId('service_id')
+                ->constrained()
+                ->cascadeOnDelete();
+            $table->decimal('amount', 10,2);
+            $table->date('due_date');
+            $table->timestamp('paid_at')->nullable(); //quando foi pago!
+            $table->enum('status', ['pending', 'paid', 'late'])
+            ->default('pending');
             $table->timestamps();
-        });
+    });
     }
 
     /**
