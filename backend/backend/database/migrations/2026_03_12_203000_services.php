@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('client_id')->constrained('clients');
-            // $table->foreignId('payments_id')->constrained('payments');
+            $table->foreignId('client_id')->constrained()->onDelete('cascade');
             $table->date('due_date');
+            $table->date('started_at');
             $table->string('plans', 255);
             $table->string('description', 255);
             $table->decimal('price', 10, 2);

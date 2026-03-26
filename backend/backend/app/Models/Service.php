@@ -10,7 +10,7 @@ class Service extends Model
 
     protected $fillable = [
         'client_id',
-        'due_day',
+        // 'due_day',
         'due_date',
         'plans',
         'description',

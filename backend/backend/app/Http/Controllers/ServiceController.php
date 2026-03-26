@@ -32,9 +32,8 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'client_id' => 'required|exists:clients.id',
-            // 'payment_id' => 'nullable|exists:payments,id',
-            'due_day'=> 'required|integer|min:1|max:31',
+            'client_id' => 'required|exists:clients,id',
+            'due_date' => 'required|integer|min:1|max:31',
             'plans' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'price' => 'required|numeric',
@@ -42,14 +41,25 @@ class ServiceController extends Controller
             'status' => 'required|in:ativo,suspenso,cancelado',
         ]);
 
+        // Calcula a data de vencimento baseada no dia e data de início
+        $startedAt = Carbon::createFromFormat('Y-m-d', $validated['started_at']);
+        $due_date = Carbon::create($startedAt->year, $startedAt->month, $validated['due_date']);
 
-        $service = Service::create($validated);
-
-        $due_date = Carbon::now()->day($service->due_day);
-
-        if($due_date < now()){
-            $due_date = $due_date->addMonth();
+        // Se o dia de vencimento já passou neste mês, usa o próximo mês
+        if ($due_date < $startedAt) {
+            $due_date->addMonth();
         }
+
+        $service = Service::create([
+            'client_id' => $validated['client_id'],
+            // 'due_day' => $validated['due_day'],
+            'due_date' => $due_date->format('Y-m-d'),
+            'plans' => $validated['plans'],
+            'description' => $validated['description'],
+            'price' => $validated['price'],
+            'status' => $validated['status'],
+            'started_at' => $validated['started_at'],
+        ]);
 
         Payment::create([
             'service_id' => $service->id,

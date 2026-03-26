@@ -19,12 +19,19 @@ export class Dashboard implements OnInit {
   totalServices = 0;
   totalProducts = 0;
 
+  status = {
+    total: 0,
+    pending: 0,
+    paid: 0,
+    late: 0
+  };
+
   constructor(
     private clientService: ClientService,
     private paymentService: PaymentService,
     private serviceService: ServiceService,
     private productsService: ProductsService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadTotals();

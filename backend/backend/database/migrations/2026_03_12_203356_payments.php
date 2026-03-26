@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('services_id')
+            $table->foreignId('service_id')
                 ->constrained('services')
                 ->cascadeOnDelete();
             $table->decimal('amount', 10,2);

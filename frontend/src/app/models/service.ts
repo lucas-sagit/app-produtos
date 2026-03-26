@@ -2,8 +2,8 @@ export interface Service {
   id: number;
   client_id: number;
   client?: any;
-  due_date: string;
-  due_day?: number;
+  due_date: Date;
+  // due_day?: number;
   plans: string;
   description: string;
   price: number;

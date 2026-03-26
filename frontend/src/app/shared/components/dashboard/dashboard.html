@@ -15,7 +15,10 @@
     <div class="dashboard-header">
       <p>Visão geral do sistema</p>
     </div>
+
     <div class="dashboard-grid">
+
+      <!-- CLIENTES -->
       <div class="card card-clients">
         <div class="card-icon">👥</div>
         <div class="card-content">
@@ -23,13 +26,8 @@
           <p class="total">{{ totalClients }}</p>
         </div>
       </div>
-      <div class="card card-payments">
-        <div class="card-icon">💳</div>
-        <div class="card-content">
-          <h3>Pagamentos</h3>
-          <p class="total">{{ totalPayments }}</p>
-        </div>
-      </div>
+
+      <!-- SERVIÇOS -->
       <div class="card card-services">
         <div class="card-icon">🛠️</div>
         <div class="card-content">
@@ -37,6 +35,8 @@
           <p class="total">{{ totalServices }}</p>
         </div>
       </div>
+
+      <!-- PRODUTOS -->
       <div class="card card-products">
         <div class="card-icon">📦</div>
         <div class="card-content">
@@ -44,6 +44,52 @@
           <p class="total">{{ totalProducts }}</p>
         </div>
       </div>
+
+      <!-- STATUS TOTAL -->
+      <!-- <div class="card card-total">
+        <div class="card-icon">📊</div>
+        <div class="card-content">
+          <h3>Total</h3>
+          <p class="total">{{ status?.total }}</p>
+        </div>
+      </div> -->
+
+        <!-- PAGAMENTOS -->
+      <div class="card card-payments">
+        <div class="card-icon">💳</div>
+        <div class="card-content">
+          <h3>Pagamentos</h3>
+          <p class="total">{{ totalPayments }}</p>
+        </div>
+      </div>
+
+      <!-- PENDENTES -->
+      <div class="card card-pending">
+        <div class="card-icon">⏳</div>
+        <div class="card-content">
+          <h3>Pendentes</h3>
+          <p class="total">{{ status?.pending }}</p>
+        </div>
+      </div>
+
+      <!-- PAGOS -->
+      <div class="card card-paid">
+        <div class="card-icon">✅</div>
+        <div class="card-content">
+          <h3>Pagos</h3>
+          <p class="total">{{ status?.paid }}</p>
+        </div>
+      </div>
+
+      <!-- ATRASADOS -->
+      <div class="card card-late">
+        <div class="card-icon">⚠️</div>
+        <div class="card-content">
+          <h3>Atrasados</h3>
+          <p class="total">{{ status?.late }}</p>
+        </div>
+      </div>
+
     </div>
   </main>
 </div>
