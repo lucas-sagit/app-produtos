@@ -27,14 +27,14 @@ class PaymentController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'service_id' => 'required|exists::services.id',
+            'service_id' => 'required|exists:services,id',
             'amount' => 'required|numeric',
             'due_date' => 'required|date',
         ]);
 
         $payment = Payment::create([
             ...$validated,
-            'status' => 'pedding'
+            'status' => 'pending'
         ]);
 
 
@@ -58,12 +58,12 @@ class PaymentController extends Controller
         $payment = Payment::findOrFail($id);
         $payment->update([
             'status' => 'paid',
-            'paid_id' => now()
+            'paid_at' => now()
         ]);
 
         return response()->json([
-            'message'=>'pagamento confirmado',
-            'paymente' => $payment
+            'message' => 'Pagamento confirmado',
+            'payment' => $payment
         ]);
     }
 
@@ -101,7 +101,7 @@ class PaymentController extends Controller
         $validated = $request->validate([
             'amount' => 'numeric',
             'due_date' => 'date',
-            'status' => 'in(pedding, paid, late)'
+            'status' => 'in:pending,paid,late'
         ]);
 
         $payment->update($validated);

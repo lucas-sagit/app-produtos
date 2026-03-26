@@ -13,7 +13,7 @@ class Payment extends Model
        'service_id',
        'amount',
        'due_date',
-       'paid_it',
+       'paid_at',
        'status'
     ];
 

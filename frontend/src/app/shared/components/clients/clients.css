@@ -1,3 +1,7 @@
+.body{
+  background-color: #f5f7fa;
+}
+
 .title {
   color: #0056b3;
   padding: 3px 20px 3px;
@@ -9,6 +13,10 @@
   align-items: center;
   justify-content: space-between;
   margin: 10px;
+  background: #ffffff; /* fundo branco */
+  border-radius: 12px; /* bordas arredondadas */
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* sombra suave */
 }
 
 
@@ -20,13 +28,53 @@
   transform: translateX(-50%);
 }
 
+.search-container {
+  position: relative;
+  width: 350px; /* 🔥 aumenta largura */
+}
+
+.search-container input {
+  width: 100%;
+  padding: 10px 12px 10px 40px; /* espaço pra lupa */
+  border: 1px solid #ccc;
+  border-radius: 8px; /* pode ajustar se quiser mais reto */
+  outline: none;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.search-container input:focus {
+  border-color: #007bff;
+}
+
+/* 🔍 ícone dentro */
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  font-size: 20px;
+}
+
+.body_table{
+  padding: 12px;
+  box-shadow: #ccc;
+}
+
 .table {
   width: 100%;
-  border-collapse: collapse;
-  background: white;
+  /* border-collapse: collapse; */
+  /* background: white; */
   border-radius: 10px;
-  overflow: hidden;
+  /* overflow: hidden; */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  max-height: 500px;
+  overflow: hidden;
+  background: #ffffff; /* fundo branco */
+  border-radius: 12px; /* bordas arredondadas */
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* sombra suave */
 }
 
 .table th,
@@ -39,10 +87,25 @@
 .table th {
   background: linear-gradient(to right, #007bff, #0056b3);
   color: white;
+  padding: 12px;
 }
 
 .table tr:hover {
   background: #f5f5f5;
+}
+
+.table tbody tr {
+  height: 48px;
+}
+
+.active {
+  color: green;
+  font-weight: bold;
+}
+
+.inactive {
+  color: red;
+  font-weight: bold;
 }
 
 .button_add {
@@ -72,4 +135,14 @@
 
 .btn-edit:hover {
   background: #e0e7ff;
+}
+
+.paginator {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+  padding: 10px;
+  z-index: 1000;
 }

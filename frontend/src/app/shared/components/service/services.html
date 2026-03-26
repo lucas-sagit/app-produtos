@@ -1,24 +1,80 @@
-<div class="container">
-  <div class="header">
-    <app-go-back></app-go-back>
+<div class="body">
+
+  <div class="title">
     <h2>Serviços</h2>
   </div>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Descrição</th>
-        <th>Preço</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let service of services">
-        <td>{{ service.id }}</td>
-        <td>{{ service.name }}</td>
-        <td>{{ service.description }}</td>
-        <td>{{ service.price }}</td>
-      </tr>
-    </tbody>
-  </table>
+
+  <div class="header">
+    <app-go-back></app-go-back>
+
+    <div class="search-container">
+      <mat-icon class="search-icon">search</mat-icon>
+      <input 
+        type="text" 
+        [(ngModel)]="searchClient" 
+        placeholder="Buscar por cliente" 
+        (keyup.enter)="searchByClient()" 
+      />
+    </div>
+
+    <div class="button_add" (click)="openCreateDialog()">
+      <mat-icon>add</mat-icon>
+    </div>
+  </div>
+
+  <div class="body_table">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Cliente</th>
+          <th>Plano</th>
+          <th>Descrição</th>
+          <th>Preço</th>
+          <th>Vencimento</th>
+          <th>Início</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let service of pagedServices">
+          <td>{{ service.id }}</td>
+          <td>{{ service.client?.name }}</td>
+          <td>{{ service.plans }}</td>
+          <td>{{ service.description }}</td>
+          <td>{{ service.price | currency:'BRL' }}</td>
+          <td>{{ service.due_date | date:'dd/MM/yyyy' }}</td>
+          <td>{{ service.started_at | date:'dd/MM/yyyy' }}</td>
+          <td>
+            <span [ngClass]="getStatusClass(service.status)">
+              {{ getStatusLabel(service.status) }}
+            </span>
+          </td>
+          <td>
+            <button 
+              class="btn-action btn-edit"
+              (click)="openEditDialog(service)"
+              title="Editar">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button 
+              class="btn-action btn-delete"
+              (click)="deleteService(service)"
+              title="Excluir">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="paginator">
+      <mat-paginator 
+        [length]="filteredServices.length" 
+        [pageSize]="10" 
+        (page)="onPageChange($event)">
+      </mat-paginator>
+    </div>
+  </div>
 </div>

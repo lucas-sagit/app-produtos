@@ -1,38 +1,123 @@
-<app-go-back></app-go-back>
-<table class="table">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Valor</th>
-      <th>Vencimento</th>
-      <th>Status</th>
-      <th>Pago em</th>
-      <th>Ações</th>
-    </tr>
-  </thead>
+<div class="body">
 
-  <tbody>
-    <tr *ngFor="let payment of payments">
-      <td>{{ payment.id }}</td>
-      <td>{{ payment.amount }}</td>
-      <td>{{ payment.due_date }}</td>
+  <div class="title">
+    <h2>Pagamentos</h2>
+  </div>
 
-      <td>
-        <span [ngClass]="payment.status"
-         {{getStatusLabel(payment.status)}}
-        >
-        </span>
-      </td>
+  <!-- Cards de Estatísticas -->
+  <div class="status-container">
+    <div class="stat-card stat-total">
+      <div class="stat-value">{{ status.total }}</div>
+      <div class="stat-label">Total</div>
+    </div>
+    <div class="stat-card stat-pending">
+      <div class="stat-value">{{ status.pending }}</div>
+      <div class="stat-label">Pendentes</div>
+    </div>
+    <div class="stat-card stat-paid">
+      <div class="stat-value">{{ status.paid }}</div>
+      <div class="stat-label">Pagos</div>
+    </div>
+    <div class="stat-card stat-late">
+      <div class="stat-value">{{ status.late }}</div>
+      <div class="stat-label">Atrasados</div>
+    </div>
+  </div>
 
-      <td>{{ payment.paid_at || '-' }}</td>
+  <div class="header">
+    <app-go-back></app-go-back>
 
-      <td>
-        <button
-          *ngIf="payment.status !== 'paid'"
-          (click)="pay(payment.id)">
-          Pagar
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+    <div class="filters-container">
+      <div class="search-container">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input
+          type="text"
+          [(ngModel)]="searchService"
+          placeholder="Buscar por cliente ou plano"
+          (keyup.enter)="searchByService()"
+        />
+      </div>
+
+      <mat-form-field appearance="outline" class="filter-select">
+        <mat-label>Filtrar por status</mat-label>
+        <mat-select [value]="filterStatus" (selectionChange)="onFilterChange()">
+          <mat-option value="all">Todos</mat-option>
+          <mat-option value="pending">Pendentes</mat-option>
+          <mat-option value="paid">Pagos</mat-option>
+          <mat-option value="late">Atrasados</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="actions-header">
+      <button mat-raised-button color="warn" (click)="markLate()" class="btn-mark-late">
+        <mat-icon>warning</mat-icon>
+        Atualizar Atrasados
+      </button>
+      <div class="button_add" (click)="openCreateDialog()">
+        <mat-icon>add</mat-icon>
+      </div>
+    </div>
+  </div>
+
+  <div class="body_table">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Cliente</th>
+          <th>Plano</th>
+          <th>Valor</th>
+          <th>Vencimento</th>
+          <th>Pago em</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let payment of pagedPayments">
+          <td>{{ payment.id }}</td>
+          <td>{{ payment.service?.client?.name }}</td>
+          <td>{{ payment.service?.plans }}</td>
+          <td>{{ payment.amount | currency:'BRL' }}</td>
+          <td>{{ payment.due_date | date:'dd/MM/yyyy' }}</td>
+          <td>{{ payment.paid_at ? (payment.paid_at | date:'dd/MM/yyyy HH:mm') : '-' }}</td>
+          <td>
+            <span [ngClass]="getStatusClass(payment.status)">
+              {{ getStatusLabel(payment.status) }}
+            </span>
+          </td>
+          <td>
+            <button
+              *ngIf="payment.status !== 'paid'"
+              class="btn-action btn-pay"
+              (click)="pay(payment.id)"
+              title="Pagar">
+              <mat-icon>check_circle</mat-icon>
+            </button>
+            <button
+              class="btn-action btn-edit"
+              (click)="openEditDialog(payment)"
+              title="Editar">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              class="btn-action btn-delete"
+              (click)="deletePayment(payment)"
+              title="Excluir">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="paginator">
+      <mat-paginator
+        [length]="filteredPayments.length"
+        [pageSize]="10"
+        (page)="onPageChange($event)">
+      </mat-paginator>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+<div class="dialog-container">
+  <h2>{{ isEdit ? 'Editar Pagamento' : 'Novo Pagamento' }}</h2>
+
+  <form [formGroup]="form" class="form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Serviço</mat-label>
+      <mat-select formControlName="service_id">
+        <mat-option *ngFor="let service of services" [value]="service.id">
+          {{ service.client?.name }} - {{ service.plans }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('service_id')?.hasError('required')">
+        Serviço é obrigatório
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Valor (R$)</mat-label>
+      <input matInput formControlName="amount" type="number" step="0.01" placeholder="0,00" />
+      <mat-error *ngIf="form.get('amount')?.hasError('required')">
+        Valor é obrigatório
+      </mat-error>
+      <mat-error *ngIf="form.get('amount')?.hasError('min')">
+        Valor deve ser maior ou igual a zero
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Data de Vencimento</mat-label>
+      <input matInput formControlName="due_date" type="date" />
+      <mat-error *ngIf="form.get('due_date')?.hasError('required')">
+        Data de vencimento é obrigatória
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status">
+        <mat-option *ngFor="let status of statusOptions" [value]="status.value">
+          {{ status.label }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('status')?.hasError('required')">
+        Status é obrigatório
+      </mat-error>
+    </mat-form-field>
+
+    <div class="actions">
+      <button mat-button type="button" (click)="close()">Cancelar</button>
+      <button mat-raised-button color="primary" type="button" (click)="save()" [disabled]="form.invalid">
+        {{ isEdit ? 'Atualizar' : 'Criar' }}
+      </button>
+    </div>
+  </form>
+</div>

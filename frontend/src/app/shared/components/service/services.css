@@ -1,18 +1,67 @@
-.container {
+.body {
+  background-color: #f5f7fa;
   padding: 20px;
+}
+
+.title {
+  color: #0056b3;
+  padding: 3px 20px 3px;
+  font-size: 1rem;
 }
 
 .header {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 20px;
+  justify-content: space-between;
+  margin: 10px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.header h2 {
-  margin: 0;
+.search-container {
+  position: relative;
+  width: 350px;
+}
+
+.search-container input {
+  width: 100%;
+  padding: 10px 12px 10px 40px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.search-container input:focus {
+  border-color: #007bff;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  font-size: 20px;
+}
+
+.button_add {
+  background: #3b82f6;
   color: white;
-  font-size: 2rem;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.body_table {
+  padding: 12px;
 }
 
 .table {
@@ -22,9 +71,12 @@
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  max-height: 500px;
+  overflow: auto;
 }
 
-.table th, .table td {
+.table th,
+.table td {
   padding: 12px;
   text-align: left;
   border-bottom: 1px solid #ddd;
@@ -37,4 +89,73 @@
 
 .table tr:hover {
   background: #f5f5f5;
+}
+
+.table tbody tr {
+  height: 48px;
+}
+
+/* Status badges */
+.status-ativo {
+  color: green;
+  font-weight: bold;
+  padding: 4px 8px;
+  background: #d4edda;
+  border-radius: 4px;
+}
+
+.status-suspenso {
+  color: #856404;
+  font-weight: bold;
+  padding: 4px 8px;
+  background: #fff3cd;
+  border-radius: 4px;
+}
+
+.status-cancelado {
+  color: red;
+  font-weight: bold;
+  padding: 4px 8px;
+  background: #f8d7da;
+  border-radius: 4px;
+}
+
+/* Action buttons */
+.btn-action {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 4px;
+  margin-right: 4px;
+}
+
+.btn-edit {
+  color: #3b82f6;
+}
+
+.btn-edit:hover {
+  background: #e0e7ff;
+}
+
+.btn-delete {
+  color: #dc3545;
+}
+
+.btn-delete:hover {
+  background: #fde8e8;
+}
+
+.paginator {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+  padding: 10px;
+  z-index: 1000;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 }

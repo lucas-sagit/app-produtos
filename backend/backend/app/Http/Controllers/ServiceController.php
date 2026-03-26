@@ -32,7 +32,7 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'client_id' => 'required|exists:clients,id',
+            'client_id' => 'required|exists:clients.id',
             // 'payment_id' => 'nullable|exists:payments,id',
             'due_day'=> 'required|integer|min:1|max:31',
             'plans' => 'required|string|max:255',
@@ -54,7 +54,7 @@ class ServiceController extends Controller
         Payment::create([
             'service_id' => $service->id,
             'amount' => $service->price,
-            'due_date' => $service->$due_date,
+            'due_date' => $due_date,
             'status' => 'pending'
         ]);
 

@@ -7,10 +7,21 @@ import { GoBack } from '../go_Back/goBack';
 import { MatIcon } from '@angular/material/icon';
 import { ClientDialogComponent } from '../clientDialog/clientDialog';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-clients',
-  imports: [CommonModule, FormsModule, GoBack, MatIcon, ClientDialogComponent, MatDialogModule ],
+  imports:
+    [
+      CommonModule,
+      FormsModule,
+      GoBack,
+      MatIcon,
+      ClientDialogComponent,
+      MatDialogModule,
+      MatPaginator
+    ],
   standalone: true,
   templateUrl: './clients.html',
   styleUrl: './clients.css',
@@ -18,7 +29,11 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 export class ClientsComponent implements OnInit {
   clients: Client[] = [];
   filteredClients: Client[] = [];
+  pagedClients: any[] = [];
   searchName: string = '';
+  pageSize = 10;
+  currentPage = 0;
+  first = 0;
 
   constructor(
     private clientService: ClientService,
@@ -29,6 +44,19 @@ export class ClientsComponent implements OnInit {
     this.loadClients();
   }
 
+  onPageChange(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex;
+    this.updatePagedClients();
+  }
+
+  updatePagedClients(): void {
+    const start = this.currentPage * this.pageSize;
+    const end = start + this.pageSize;
+    this.pagedClients = this.filteredClients.slice(start, end);
+
+  }
+
   loadClients(): void {
     this.clientService.getClients().subscribe({
       next: (data: Client[]) => {
@@ -36,6 +64,8 @@ export class ClientsComponent implements OnInit {
         this.clients = data;
         this.filteredClients = data;
         console.log('Clientes carregados:', this.clients.length);
+        this.currentPage= 0;
+        this.updatePagedClients();
       },
       error: (err: any) => {
         console.error('Erro ao buscar clientes:', err);
@@ -53,6 +83,8 @@ export class ClientsComponent implements OnInit {
     } else {
       this.filteredClients = this.clients;
     }
+    this.currentPage = 0;
+    this.updatePagedClients();
   }
 
   openCreateDialog() {

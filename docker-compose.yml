@@ -19,7 +19,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-      restart: always
     container_name: laravel_app
     working_dir: /app
     ports:

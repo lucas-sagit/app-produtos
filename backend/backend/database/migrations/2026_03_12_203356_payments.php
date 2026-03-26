@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('service_id')
-                ->constrained()
+            $table->foreignId('services_id')
+                ->constrained('services')
                 ->cascadeOnDelete();
             $table->decimal('amount', 10,2);
             $table->date('due_date');
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payment');
+        Schema::dropIfExists('payments');
     }
 };
