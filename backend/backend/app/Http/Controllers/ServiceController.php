@@ -52,7 +52,6 @@ class ServiceController extends Controller
 
         $service = Service::create([
             'client_id' => $validated['client_id'],
-            // 'due_day' => $validated['due_day'],
             'due_date' => $due_date->format('Y-m-d'),
             'plans' => $validated['plans'],
             'description' => $validated['description'],

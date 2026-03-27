@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Payment;
+use Illuminate\Support\Carbon;
 
 class PaymentController extends Controller
 {
@@ -54,18 +55,45 @@ class PaymentController extends Controller
         return response()->json($payment);
     }
 
-    public function pay(string $id){
-        $payment = Payment::findOrFail($id);
-        $payment->update([
-            'status' => 'paid',
-            'paid_at' => now()
-        ]);
+   public function pay(string $id){
+    $payment = Payment::findOrFail($id);
 
+    // Evita pagar duas vezes
+    if ($payment->status === 'paid') {
         return response()->json([
-            'message' => 'Pagamento confirmado',
-            'payment' => $payment
-        ]);
+            'message' => 'Pagamento já foi realizado'
+        ], 400);
     }
+
+    // Atualiza pagamento atual
+    $payment->update([
+        'status' => 'paid',
+        'paid_at' => now()
+    ]);
+
+    // 🔥 Gera próxima data
+    $nextDueDate = Carbon::parse($payment->due_date)->addMonth();
+
+    // 🔥 Cria novo pagamento
+    $newPayment = Payment::create([
+        'service_id' => $payment->service_id,
+        'amount' => $payment->amount,
+        'due_date' => $nextDueDate,
+        'status' => 'pending'
+    ]);
+
+    // 🔥 Atualiza service
+    $service = $payment->service;
+    $service->update([
+        'due_date' => $nextDueDate
+    ]);
+
+    return response()->json([
+        'message' => 'Pagamento confirmado e próximo gerado',
+        'payment' => $payment,
+        'next_payment' => $newPayment
+    ]);
+}
 
     public function markLate(){
         $payments = Payment::where('status', 'pending')
@@ -123,4 +151,6 @@ class PaymentController extends Controller
             'message' => 'Pagamento deletado com sucesso!'
         ]);
     }
+
+
 }

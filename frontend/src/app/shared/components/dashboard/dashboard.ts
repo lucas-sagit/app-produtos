@@ -5,10 +5,12 @@ import { PaymentService } from '../../../services/payment.service';
 import { ServiceService } from '../../../services/service.service';
 import { ProductsService } from '../../../services/products.service';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { PaymentDialogComponent } from '../paymentDialog/paymentDialog';
+import { PaymentsComponent } from '../payments/payments';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink, RouterLinkActive, PaymentDialogComponent, PaymentsComponent],
   standalone: true,
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',

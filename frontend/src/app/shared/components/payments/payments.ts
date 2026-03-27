@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/select';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-payments',
@@ -57,6 +58,10 @@ export class PaymentsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPayments();
+
+    interval(5000).subscribe(()=> {
+      this.loadPayments();
+    });
   }
 
   onPageChange(event: PageEvent) {
