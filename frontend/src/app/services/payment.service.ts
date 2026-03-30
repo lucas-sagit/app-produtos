@@ -38,4 +38,8 @@ export class PaymentService {
   deletePayment(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+
+  getHistory(serviceId: number): Observable<any> {
+    return this.http.get<any[]>(`${this.apiUrl}/history/${serviceId}`);
+  }
 }

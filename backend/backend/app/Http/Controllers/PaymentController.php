@@ -13,8 +13,27 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        return response()->json(Payment::with('service.client')->get()
-        );
+        // Pega o pagamento mais recente de cada serviço (maior ID)
+        $subQuery = Payment::selectRaw('MAX(id) as max_id')
+            ->groupBy('service_id');
+
+        $payments = Payment::whereIn('id', $subQuery)
+            ->with(['service.client'])
+            ->get();
+
+        return response()->json($payments);
+    }
+
+    /**
+     * Get payment history by service ID
+     */
+    public function history(int $serviceId)
+    {
+        $payments = Payment::where('service_id', $serviceId)
+            ->orderBy('due_date', 'desc')
+            ->get();
+
+        return response()->json($payments);
     }
 
     /**
@@ -74,24 +93,37 @@ class PaymentController extends Controller
     // 🔥 Gera próxima data
     $nextDueDate = Carbon::parse($payment->due_date)->addMonth();
 
-    // 🔥 Cria novo pagamento
-    $newPayment = Payment::create([
-        'service_id' => $payment->service_id,
-        'amount' => $payment->amount,
-        'due_date' => $nextDueDate,
-        'status' => 'pending'
-    ]);
+    // 🔥 Verifica se já existe pagamento pendente para este serviço
+    $existingPendingPayment = Payment::where('service_id', $payment->service_id)
+        ->where('status', 'pending')
+        ->where('id', '!=', $payment->id)
+        ->first();
 
-    // 🔥 Atualiza service
-    $service = $payment->service;
-    $service->update([
-        'due_date' => $nextDueDate
-    ]);
+    // 🔥 Cria novo pagamento apenas se não existir um pendente
+    if (!$existingPendingPayment) {
+        $newPayment = Payment::create([
+            'service_id' => $payment->service_id,
+            'amount' => $payment->amount,
+            'due_date' => $nextDueDate,
+            'status' => 'pending'
+        ]);
+
+        // 🔥 Atualiza service
+        $service = $payment->service;
+        $service->update([
+            'due_date' => $nextDueDate
+        ]);
+
+        return response()->json([
+            'message' => 'Pagamento confirmado e próximo gerado',
+            'payment' => $payment,
+            'next_payment' => $newPayment
+        ]);
+    }
 
     return response()->json([
-        'message' => 'Pagamento confirmado e próximo gerado',
-        'payment' => $payment,
-        'next_payment' => $newPayment
+        'message' => 'Pagamento confirmado',
+        'payment' => $payment
     ]);
 }
 

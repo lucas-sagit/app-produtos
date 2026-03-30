@@ -7,6 +7,7 @@ export interface Payment {
   due_date: Date;
   status: `ativo` | `suspenso` | `cancelado`;
   started_at: string;
+  service_id: number;
 
   payments?: Payment[];
 }

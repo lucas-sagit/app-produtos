@@ -30,12 +30,8 @@
     <div class="filters-container">
       <div class="search-container">
         <mat-icon class="search-icon">search</mat-icon>
-        <input
-          type="text"
-          [(ngModel)]="searchService"
-          placeholder="Buscar por cliente ou plano"
-          (keyup.enter)="searchByService()"
-        />
+        <input type="text" [(ngModel)]="searchService" placeholder="Buscar por cliente ou plano"
+          (keyup.enter)="searchByService()" />
       </div>
 
       <mat-form-field appearance="outline" class="filter-select">
@@ -81,30 +77,27 @@
           <td>{{ payment.service?.plans }}</td>
           <td>{{ payment.amount | currency:'BRL' }}</td>
           <td>{{ payment.due_date | date:'dd/MM/yyyy' }}</td>
-          <td>{{ payment.paid_at ? (payment.paid_at | date:'dd/MM/yyyy HH:mm') : '-' }}</td>
+          <td>
+            Último pagamento:
+            {{ payment.paid_at ? (payment.paid_at | date:'dd/MM/yyyy HH:mm') : '-' }}
+          </td>
           <td>
             <span [ngClass]="getStatusClass(payment.status)">
               {{ getStatusLabel(payment.status) }}
             </span>
           </td>
           <td>
-            <button
-              *ngIf="payment.status !== 'paid'"
-              class="btn-action btn-pay"
-              (click)="pay(payment.id)"
+            <button class="btn-action" (click)="openHistory(payment.service?.id)" title="Histórico">
+              <mat-icon>history</mat-icon>
+            </button>
+            <button *ngIf="payment.status !== 'paid'" class="btn-action btn-pay" (click)="pay(payment.id)"
               title="Pagar">
               <mat-icon>check_circle</mat-icon>
             </button>
-            <button
-              class="btn-action btn-edit"
-              (click)="openEditDialog(payment)"
-              title="Editar">
+            <button class="btn-action btn-edit" (click)="openEditDialog(payment)" title="Editar">
               <mat-icon>edit</mat-icon>
             </button>
-            <button
-              class="btn-action btn-delete"
-              (click)="deletePayment(payment)"
-              title="Excluir">
+            <button class="btn-action btn-delete" (click)="deletePayment(payment)" title="Excluir">
               <mat-icon>delete</mat-icon>
             </button>
           </td>
@@ -113,10 +106,7 @@
     </table>
 
     <div class="paginator">
-      <mat-paginator
-        [length]="filteredPayments.length"
-        [pageSize]="10"
-        (page)="onPageChange($event)">
+      <mat-paginator [length]="filteredPayments.length" [pageSize]="10" (page)="onPageChange($event)">
       </mat-paginator>
     </div>
   </div>

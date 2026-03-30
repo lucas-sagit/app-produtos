@@ -18,3 +18,4 @@ Route::apiResource('payments', PaymentController::class);
 Route::post('/login', [LoginController::class, 'authentication']);
 Route::put('payments/{id}/pay', [PaymentController::class, 'pay']);
 Route::post('payments/mark-late', [PaymentController::class, 'markLate']);
+Route::get('payments/history/{serviceId}', [PaymentController::class, 'history']);

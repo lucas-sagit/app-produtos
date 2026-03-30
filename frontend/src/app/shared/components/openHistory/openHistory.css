@@ -1,0 +1,23 @@
+.body {
+  padding: 24px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+h2 {
+  margin: 0 0 20px 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.timeline {
+  font-size: 0.85em;
+  color: #6b7280;
+}
+
+.contentList {
+  display: flex;
+  gap: 12px;
+  padding: 0;
+}
+

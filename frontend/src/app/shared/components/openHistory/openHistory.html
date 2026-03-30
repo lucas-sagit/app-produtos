@@ -1,0 +1,26 @@
+<div class="body">
+
+  <h2>Histórico de Pagamentos</h2>
+
+  <div class="timeline">
+    <div *ngFor="let payment of data" class="timeline-item">
+
+      <div class="status" [ngClass]="payment.status"></div>
+
+      <div class="content">
+        <div class="contentList">
+          <p><strong>Cliente:</strong> {{ payment.service?.client?.name }}</p>
+          <p><strong>Vencimento:</strong> {{ payment.due_date | date:'dd/MM/yyyy' }}</p>
+          <p><strong>Valor:</strong> {{ payment.amount | currency:'BRL' }}</p>
+          <p><strong>Pago em:</strong>
+            {{ payment.paid_at ? (payment.paid_at | date:'dd/MM/yyyy HH:mm') : '-' }}
+          </p>
+          <p class="label" [ngClass]="payment.status">
+            {{ getStatusLabel(payment.status) }}
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

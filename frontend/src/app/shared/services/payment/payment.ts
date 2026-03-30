@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class Payment {
   private Url = 'http://localhost:8000/api/payments';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   createPayment(payment: any): Observable<any> {
     return this.http.post<any>(this.Url, payment);
@@ -16,5 +16,9 @@ export class Payment {
 
   getPayments(): Observable<any[]> {
     return this.http.get<any[]>(this.Url);
+  }
+
+  getHistory(serviceId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.Url}/history/${serviceId}`);
   }
 }

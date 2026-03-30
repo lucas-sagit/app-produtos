@@ -14,6 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/select';
 import { interval } from 'rxjs';
+import { OpenHistory } from '../openHistory/openHistory';
 
 @Component({
   selector: 'app-payments',
@@ -25,11 +26,11 @@ import { interval } from 'rxjs';
     MatSelect,
     MatOption,
     MatDialogModule,
-    PaymentDialogComponent,
     MatPaginator,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    OpenHistory
   ],
   standalone: true,
   templateUrl: './payments.html',
@@ -54,14 +55,14 @@ export class PaymentsComponent implements OnInit {
   constructor(
     private paymentService: PaymentService,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadPayments();
 
-    interval(5000).subscribe(()=> {
-      this.loadPayments();
-    });
+    // interval(5000).subscribe(() => {
+    //   this.loadPayments();
+    // });
   }
 
   onPageChange(event: PageEvent) {
@@ -79,6 +80,7 @@ export class PaymentsComponent implements OnInit {
   loadPayments(): void {
     this.paymentService.getPayments().subscribe({
       next: (data: Payment[]) => {
+        console.log('Pagamentos carregados:', data);
         this.payments = data;
         this.calculateStats();
         this.applyFilters();
@@ -165,6 +167,31 @@ export class PaymentsComponent implements OnInit {
       }
     });
   }
+
+
+  openHistory(serviceId: number) {
+    console.log('openHistory chamado com serviceId:', serviceId);
+    console.log('payment completo:', this.pagedPayments.find(p => p.service?.id === serviceId));
+
+    if (!serviceId) {
+      console.error('serviceId é inválido!');
+      return;
+    }
+
+    this.paymentService.getHistory(serviceId).subscribe({
+      next: (res) => {
+        console.log('Histórico retornado:', res);
+        this.dialog.open(OpenHistory, {
+          width: '600px',
+          data: res
+        });
+      },
+      error: (err) => {
+        console.error('Erro ao buscar histórico:', err);
+      }
+    });
+  }
+
 
   pay(id: number) {
     this.paymentService.pay(id).subscribe({
