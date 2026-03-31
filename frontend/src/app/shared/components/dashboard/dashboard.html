@@ -14,6 +14,16 @@
   <main class="main-content">
     <div class="dashboard-header">
       <p>Visão geral do sistema</p>
+      <div class="notification">
+        <button mat-icon-button (click)="openNotifications()">
+          <mat-icon matBadge="{{ notificationsCount }}" matBadgeColor="warn" *ngIf="notificationsCount > 0">
+            notifications
+          </mat-icon>
+          <mat-icon *ngIf="notificationsCount === 0">
+            notifications_none
+          </mat-icon>
+        </button>
+      </div>
     </div>
 
     <div class="dashboard-grid">
@@ -54,7 +64,7 @@
         </div>
       </div> -->
 
-        <!-- PAGAMENTOS -->
+      <!-- PAGAMENTOS -->
       <div class="card card-payments">
         <div class="card-icon">💳</div>
         <div class="card-content">

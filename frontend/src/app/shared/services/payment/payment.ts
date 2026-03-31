@@ -21,4 +21,8 @@ export class Payment {
   getHistory(serviceId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.Url}/history/${serviceId}`);
   }
+
+  getNotifications(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.Url}/notification`);
+  }
 }

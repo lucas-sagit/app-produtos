@@ -19,5 +19,8 @@ h2 {
   display: flex;
   gap: 12px;
   padding: 0;
+  border: 1px solid #878787;
+  border-radius: 4px;
+  background-color: #c8c8c8;
 }
 

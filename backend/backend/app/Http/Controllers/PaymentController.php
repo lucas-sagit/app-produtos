@@ -21,6 +21,16 @@ class PaymentController extends Controller
             ->with(['service.client'])
             ->get();
 
+        $payments->transform(function ($payment){
+            $lastPaid = Payment::where('service_id', $payment->service_id)
+                ->whereNot('paid_at')
+                ->orderBy('paid_at')
+                ->first();
+
+                $payment->last_paid_at = $lastPaid?->paid_at;
+                return $payment;
+        });
+
         return response()->json($payments);
     }
 
@@ -129,7 +139,7 @@ class PaymentController extends Controller
 
     public function markLate(){
         $payments = Payment::where('status', 'pending')
-         ->where('due_date', '<', now())
+         ->where('due_date', '<', now()->subDay(10))
          ->get();
 
          foreach ($payments as $payment){
@@ -139,7 +149,7 @@ class PaymentController extends Controller
          }
 
          return response()->json([
-            'message' => 'Pagamentos atrasados atualizados'
+            'message' => 'Pagamentos atrasados há mais de 10 dias.'
          ]);
     }
 

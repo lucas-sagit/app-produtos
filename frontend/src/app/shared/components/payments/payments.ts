@@ -13,7 +13,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/select';
-import { interval } from 'rxjs';
 import { OpenHistory } from '../openHistory/openHistory';
 
 @Component({
@@ -51,6 +50,7 @@ export class PaymentsComponent implements OnInit {
     paid: 0,
     late: 0
   };
+
 
   constructor(
     private paymentService: PaymentService,

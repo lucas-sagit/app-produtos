@@ -1,0 +1,37 @@
+<div class="notification-dialog">
+  <h2 mat-dialog-title>
+    <mat-icon>notifications_active</mat-icon>
+    Pagamentos Atrasados
+  </h2>
+
+  <mat-dialog-content>
+    <div *ngIf="data && data.length > 0; else noNotifications">
+      <div class="notification-item" *ngFor="let payment of data">
+        <div class="notification-icon">
+          <mat-icon color="warn">warning</mat-icon>
+        </div>
+        <div class="notification-content">
+          <h4>{{ getClientName(payment) }}</h4>
+          <p class="service-plan">{{ getServicePlans(payment) }}</p>
+          <p class="due-date">
+            Vencimento: <strong>{{ getDueDate(payment) }}</strong>
+          </p>
+          <p class="days-late" *ngIf="getDaysLate(payment) > 0">
+            {{ getDaysLate(payment) }} dias de atraso
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noNotifications>
+      <div class="no-notifications">
+        <mat-icon>check_circle</mat-icon>
+        <p>Nenhuma notificação de pagamento atrasado</p>
+      </div>
+    </ng-template>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Fechar</button>
+  </mat-dialog-actions>
+</div>

@@ -86,18 +86,39 @@ body {
 /* HEADER DASHBOARD */
 .dashboard-header {
   margin-bottom: 30px;
-}
-
-.dashboard-header h1 {
-  font-size: 2rem;
-  color: white;
-  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
 .dashboard-header p {
-  color: rgba(32, 41, 121, 0.8);
+  color: rgba(255, 255, 255, 0.9);
   font-size: 1rem;
-  margin-top: 5px;
+  margin: 0;
+}
+
+.notification {
+  display: flex;
+  align-items: center;
+}
+
+.notification button {
+  color: white;
+}
+
+.notification button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.notification .mat-badge-content {
+  background: #ef4444;
+  color: white;
+  font-weight: 600;
+  font-size: 11px;
+  height: 18px;
+  min-width: 18px;
 }
 
 /* CARDS DASHBOARD */
@@ -107,6 +128,9 @@ body {
   gap: 25px;
 }
 
+.mat-icon-button  {
+  color: black;
+}
 .card {
   background: white;
   padding: 30px;

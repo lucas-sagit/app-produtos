@@ -4,26 +4,6 @@
     <h2>Pagamentos</h2>
   </div>
 
-  <!-- Cards de Estatísticas -->
-  <!-- <div class="status-container">
-    <div class="stat-card stat-total">
-      <div class="stat-value">{{ status.total }}</div>
-      <div class="stat-label">Total</div>
-    </div>
-    <div class="stat-card stat-pending">
-      <div class="stat-value">{{ status.pending }}</div>
-      <div class="stat-label">Pendentes</div>
-    </div>
-    <div class="stat-card stat-paid">
-      <div class="stat-value">{{ status.paid }}</div>
-      <div class="stat-label">Pagos</div>
-    </div>
-    <div class="stat-card stat-late">
-      <div class="stat-value">{{ status.late }}</div>
-      <div class="stat-label">Atrasados</div>
-    </div>
-  </div> -->
-
   <div class="header">
     <app-go-back></app-go-back>
 
@@ -46,10 +26,10 @@
     </div>
 
     <div class="actions-header">
-      <button mat-raised-button color="warn" (click)="markLate()" class="btn-mark-late">
+      <!-- <button mat-raised-button color="warn" (click)="markLate()" class="btn-mark-late">
         <mat-icon>warning</mat-icon>
         Atualizar Atrasados
-      </button>
+      </button> -->
       <div class="button_add" (click)="openCreateDialog()">
         <mat-icon>add</mat-icon>
       </div>
@@ -79,7 +59,7 @@
           <td>{{ payment.due_date | date:'dd/MM/yyyy' }}</td>
           <td>
             Último pagamento:
-            {{ payment.paid_at ? (payment.paid_at | date:'dd/MM/yyyy HH:mm') : '-' }}
+            {{ payment.last_paid_at ? (payment.last_paid_at | date:'dd/MM/yyyy HH:mm') : '-' }}
           </td>
           <td>
             <span [ngClass]="getStatusClass(payment.status)">

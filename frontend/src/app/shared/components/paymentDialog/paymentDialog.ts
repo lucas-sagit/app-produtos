@@ -49,6 +49,22 @@ export class PaymentDialogComponent implements OnInit {
       due_date: [data?.due_date || '', Validators.required],
       status: [data?.status || 'pending', Validators.required]
     });
+
+    // Quando criar um novo pagamento e selecionar um serviço, preenche o valor automaticamente
+    if (!this.isEdit) {
+      this.form.get('service_id')?.valueChanges.subscribe((serviceId: number) => {
+        if (serviceId) {
+          const selectedService = this.services.find(s => s.id === serviceId);
+          if (selectedService && selectedService.price) {
+            this.form.patchValue({ amount: selectedService.price }, { emitEvent: false });
+          }
+          const selectExperation = this.services.find(s => s.id === serviceId);
+          if (selectExperation && selectExperation.due_date) {
+            this.form.patchValue({ due_date: selectExperation.due_date }, { emitEvent: false });
+          }
+        }
+      });
+    }
   }
 
   ngOnInit(): void {
@@ -59,6 +75,13 @@ export class PaymentDialogComponent implements OnInit {
     this.serviceService.getServices().subscribe({
       next: (data: Service[]) => {
         this.services = data;
+        // Se estiver editando e já tiver um service_id, preenche o valor do serviço
+        if (this.isEdit && this.form.value.service_id) {
+          const selectedService = this.services.find(s => s.id === this.form.value.service_id);
+          if (selectedService && selectedService.price && !this.form.value.amount) {
+            this.form.patchValue({ amount: selectedService.price }, { emitEvent: false });
+          }
+        }
       },
       error: (err: any) => {
         console.error('Erro ao carregar serviços:', err);
