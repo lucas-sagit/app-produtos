@@ -52,7 +52,6 @@ export class ServiceDialogComponent implements OnInit {
 
     this.form = this.fb.group({
       client_id: [data?.client_id || '', Validators.required],
-      due_date: [data?.due_date || '', [Validators.required, Validators.min(1), Validators.max(31)]],
       plans: [data?.plans || '', Validators.required],
       description: [data?.description || '', Validators.required],
       price: [data?.price || '', [Validators.required, Validators.min(0)]],
@@ -80,6 +79,16 @@ export class ServiceDialogComponent implements OnInit {
     if (this.form.valid) {
       this.dialogRef.close(this.form.value);
     }
+  }
+
+  getVencimentoPreview(): string {
+    const startedAt = this.form.get('started_at')?.value;
+    if (!startedAt) {
+      return '';
+    }
+    const date = new Date(startedAt);
+    date.setDate(date.getDate() + 30);
+    return date.toLocaleDateString('pt-BR');
   }
 
   close() {

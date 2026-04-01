@@ -28,8 +28,7 @@ import { OpenHistory } from '../openHistory/openHistory';
     MatPaginator,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
-    OpenHistory
+    MatButtonModule
   ],
   standalone: true,
   templateUrl: './payments.html',

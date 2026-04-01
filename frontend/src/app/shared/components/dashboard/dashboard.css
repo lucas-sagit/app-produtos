@@ -105,16 +105,16 @@ body {
 }
 
 .notification button {
-  color: white;
+  color: rgb(4, 4, 4);
 }
 
 .notification button:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(109, 38, 38, 0.1);
 }
 
 .notification .mat-badge-content {
   background: #ef4444;
-  color: white;
+  color: rgb(17, 17, 17);
   font-weight: 600;
   font-size: 11px;
   height: 18px;
@@ -281,4 +281,69 @@ body {
     gap: 20px;
   }
 
+}
+
+/* GRÁFICO DE PIZZA */
+.chart-container {
+  margin-top: 30px;
+  background: white;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.chart-container h3 {
+  font-size: 1.2rem;
+  color: #1f2937;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.chart-wrapper {
+  position: relative;
+  height: 300px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.chart-wrapper canvas {
+  max-height: 300px !important;
+}
+
+.chart-legend {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.legend-label {
+  font-size: 0.9rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.legend-value {
+  font-size: 0.9rem;
+  color: #1f2937;
+  font-weight: 600;
+  min-width: 80px;
+  text-align: right;
 }

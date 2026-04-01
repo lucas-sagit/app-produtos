@@ -10,6 +10,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { OpenNotificationComponent } from '../open-notification/openNotification';
+import { Chart, registerables } from 'chart.js';
+import { BaseChartDirective } from '../../directives/base-chart.directive';
+
+Chart.register(...registerables);
 
 @Component({
   selector: 'app-dashboard',
@@ -21,7 +25,7 @@ import { OpenNotificationComponent } from '../open-notification/openNotification
     MatButtonModule,
     MatBadgeModule,
     MatDialogModule,
-    OpenNotificationComponent
+    BaseChartDirective
   ],
   standalone: true,
   templateUrl: './dashboard.html',
@@ -43,6 +47,12 @@ export class Dashboard implements OnInit {
     late: 0
   };
 
+  // Dados do gráfico
+  pieChartData: any = {};
+  pieChartOptions: any = {};
+  pieChartType: 'pie' | 'doughnut' = 'doughnut';
+  chartLegend: { label: string; value: string; color: string }[] = [];
+
   constructor(
     private clientService: ClientService,
     private paymentService: PaymentService,
@@ -54,6 +64,7 @@ export class Dashboard implements OnInit {
   ngOnInit(): void {
     this.loadTotals();
     this.loadNotifications();
+    this.loadCurrentMonthData();
   }
 
   loadTotals(): void {
@@ -117,6 +128,75 @@ export class Dashboard implements OnInit {
         console.error('Erro ao carregar notificações:', err);
         this.notificationsCount = 0;
         this.notifications = [];
+      }
+    });
+  }
+
+  loadCurrentMonthData(): void {
+    const now = new Date();
+    const currentMonth = now.getMonth(); // 0-11
+    const currentYear = now.getFullYear();
+
+    this.paymentService.getPayments().subscribe({
+      next: (payments) => {
+        // Filtra pagamentos do mês atual
+        const currentMonthPayments = payments.filter(p => {
+          // Parse da data no formato YYYY-MM-DD
+          const dueDateParts = p.due_date.split('-');
+          const dueDateYear = parseInt(dueDateParts[0], 10);
+          const dueDateMonth = parseInt(dueDateParts[1], 10) - 1; // 0-11
+          return dueDateMonth === currentMonth && dueDateYear === currentYear;
+        });
+
+        // Calcula valores por status
+        const pendingAmount = currentMonthPayments
+          .filter(p => p.status === 'pending')
+          .reduce((sum, p) => sum + (p.amount || 0), 0);
+        const paidAmount = currentMonthPayments
+          .filter(p => p.status === 'paid')
+          .reduce((sum, p) => sum + (p.amount || 0), 0);
+        const lateAmount = currentMonthPayments
+          .filter(p => p.status === 'late')
+          .reduce((sum, p) => sum + (p.amount || 0), 0);
+
+        // Configura dados do gráfico (valores)
+        this.pieChartData = {
+          labels: ['Pagos', 'Pendentes', 'Atrasados'],
+          datasets: [{
+            data: [paidAmount, pendingAmount, lateAmount],
+            backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+            borderWidth: 0
+          }]
+        };
+
+        // Configura opções do gráfico
+        this.pieChartOptions = {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: (context: any) => {
+                  const value = context.raw;
+                  return `R$ ${value.toFixed(2)}`;
+                }
+              }
+            }
+          }
+        };
+
+        // Configura legenda personalizada
+        this.chartLegend = [
+          { label: 'Pagos', value: `R$ ${paidAmount.toFixed(2)}`, color: '#10b981' },
+          { label: 'Pendentes', value: `R$ ${pendingAmount.toFixed(2)}`, color: '#f59e0b' },
+          { label: 'Atrasados', value: `R$ ${lateAmount.toFixed(2)}`, color: '#ef4444' }
+        ];
+      },
+      error: (err) => {
+        console.error('Erro ao buscar pagamentos do mês:', err);
       }
     });
   }

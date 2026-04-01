@@ -46,23 +46,16 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Dia de Vencimento (1-31)</mat-label>
-      <input matInput formControlName="due_date" type="number" min="1" max="31" placeholder="Ex: 10" />
-      <mat-error *ngIf="form.get('due_date')?.hasError('required')">
-        Dia de vencimento é obrigatório
-      </mat-error>
-      <mat-error *ngIf="form.get('due_date')?.hasError('min') || form.get('due_date')?.hasError('max')">
-        Dia deve estar entre 1 e 31
-      </mat-error>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="full-width">
       <mat-label>Data de Início</mat-label>
       <input matInput formControlName="started_at" type="date" />
       <mat-error *ngIf="form.get('started_at')?.hasError('required')">
         Data de início é obrigatória
       </mat-error>
     </mat-form-field>
+
+    <div class="info-vencimento" *ngIf="form.get('started_at')?.value">
+      <p><strong>Vencimento:</strong> {{ getVencimentoPreview() }}</p>
+    </div>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Status</mat-label>

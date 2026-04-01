@@ -19,7 +19,6 @@ import { MatInputModule } from '@angular/material/input';
     GoBack,
     MatIcon,
     MatDialogModule,
-    ServiceDialogComponent,
     MatPaginator,
     MatFormFieldModule,
     MatInputModule

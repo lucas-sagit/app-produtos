@@ -46,24 +46,6 @@
         </div>
       </div>
 
-      <!-- PRODUTOS
-      <div class="card card-products">
-        <div class="card-icon">📦</div>
-        <div class="card-content">
-          <h3>Produtos</h3>
-          <p class="total">{{ totalProducts }}</p>
-        </div>
-      </div> -->
-
-      <!-- STATUS TOTAL -->
-      <!-- <div class="card card-total">
-        <div class="card-icon">📊</div>
-        <div class="card-content">
-          <h3>Total</h3>
-          <p class="total">{{ status?.total }}</p>
-        </div>
-      </div> -->
-
       <!-- PAGAMENTOS -->
       <div class="card card-payments">
         <div class="card-icon">💳</div>
@@ -78,28 +60,48 @@
         <div class="card-icon">⏳</div>
         <div class="card-content">
           <h3>Pendentes</h3>
-          <p class="total">{{ status?.pending }}</p>
+          <p class="total">{{ status.pending }}</p>
         </div>
       </div>
 
       <!-- PAGOS -->
-      <div class="card card-paid">
+      <!-- <div class="card card-paid">
         <div class="card-icon">✅</div>
         <div class="card-content">
           <h3>Pagos</h3>
-          <p class="total">{{ status?.paid }}</p>
+          <p class="total">{{ status.paid }}</p>
         </div>
-      </div>
+      </div> -->
 
       <!-- ATRASADOS -->
-      <div class="card card-late">
+      <!-- <div class="card card-late">
         <div class="card-icon">⚠️</div>
         <div class="card-content">
           <h3>Atrasados</h3>
-          <p class="total">{{ status?.late }}</p>
+          <p class="total">{{ status.late }}</p>
         </div>
-      </div>
+      </div> -->
 
     </div>
+
+    <!-- Gráfico de Pizza -->
+    <div class="chart-container">
+      <h3>Resumo do Mês Atual</h3>
+      <div class="chart-wrapper">
+        <canvas baseChart
+          [data]="pieChartData"
+          [options]="pieChartOptions"
+          [chartType]="pieChartType">
+        </canvas>
+      </div>
+      <div class="chart-legend">
+        <div class="legend-item" *ngFor="let item of chartLegend">
+          <span class="legend-color" [style.background-color]="item.color"></span>
+          <span class="legend-label">{{ item.label }}</span>
+          <span class="legend-value">{{ item.value }}</span>
+        </div>
+      </div>
+    </div>
+
   </main>
 </div>

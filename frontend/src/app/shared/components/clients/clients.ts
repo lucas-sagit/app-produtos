@@ -18,7 +18,6 @@ import { MatPaginator } from '@angular/material/paginator';
       FormsModule,
       GoBack,
       MatIcon,
-      ClientDialogComponent,
       MatDialogModule,
       MatPaginator
     ],

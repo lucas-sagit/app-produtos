@@ -19,6 +19,8 @@
           <p class="days-late" *ngIf="getDaysLate(payment) > 0">
             {{ getDaysLate(payment) }} dias de atraso
           </p>
+          <p class="amount">Valor: {{ getAmount(payment) }}
+          </p>
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@
   <h2>Histórico de Pagamentos</h2>
 
   <div class="timeline">
-    <div *ngFor="let payment of data" class="timeline-item">
+    <div *ngFor="let payment of data" class="timeline-item" [ngClass]="payment.status">
 
       <div class="status" [ngClass]="payment.status"></div>
 

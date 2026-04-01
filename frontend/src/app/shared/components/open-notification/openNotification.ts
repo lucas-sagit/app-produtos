@@ -35,4 +35,9 @@ export class OpenNotificationComponent {
     const diffTime = today.getTime() - dueDate.getTime();
     return Math.floor(diffTime / (1000 * 60 * 60 * 24));
   }
+
+  getAmount(payment: any): string{
+    if (!payment?.amount) return 'Valor não informado';
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(payment.amount);
+  }
 }

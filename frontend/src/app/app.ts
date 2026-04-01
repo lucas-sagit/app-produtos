@@ -1,14 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet, ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { GoBack } from './shared/components/go_Back/goBack';
 import { filter } from 'rxjs';
-import { MatPaginator } from '@angular/material/paginator';
-
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, GoBack, MatPaginator],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
