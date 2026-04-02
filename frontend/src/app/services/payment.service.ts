@@ -7,7 +7,7 @@ import { Payment } from '../models/payment';
   providedIn: 'root'
 })
 export class PaymentService {
-  private apiUrl = 'http://localhost:8000/api/payments';
+  private apiUrl = '/api/payments';
 
   constructor(private http: HttpClient) { }
 
@@ -45,5 +45,9 @@ export class PaymentService {
 
   getNotifications(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/notification`);
+  }
+
+  getDashboardPayments() {
+    return this.http.get<Payment[]>(`${this.apiUrl}/dashboard`);
   }
 }

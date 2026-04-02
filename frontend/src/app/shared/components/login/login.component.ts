@@ -17,15 +17,15 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
 
   loginForm!: FormGroup;
-  private apiUrl = 'http://localhost:8000/api/login';
-
+  private apiUrl = '/api/login';
+  isLoading = false;
 
   constructor(private http: HttpClient, private formBuilder: FormBuilder, private router: Router) { }
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
-      cpf: ['', Validators.required],
-      password: ['', Validators.required]
+      cpf: ['', [Validators.required]],
+      password: ['', [Validators.required]]
     });
   }
 
@@ -33,17 +33,20 @@ export class LoginComponent implements OnInit {
     return this.http.post<Login>(this.apiUrl, login);
   }
 
-    onSubmit() {
+  onSubmit() {
     if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
       return;
     }
 
+    this.isLoading = true;
     const loginData = this.loginForm.value;
     console.log(loginData);
 
     this.createLogin(loginData).subscribe({
       next: (response) => {
         console.log('Login feito com sucesso:', response);
+        this.isLoading = false;
 
         if (response.token) {
           localStorage.setItem('token', response.token);
@@ -53,6 +56,7 @@ export class LoginComponent implements OnInit {
 
       error: (err) => {
         console.error('Erro ao fazer login:', err);
+        this.isLoading = false;
         alert('Login falhou. Verifique CPF e senha.');
       }
     });

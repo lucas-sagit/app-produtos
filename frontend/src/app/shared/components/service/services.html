@@ -9,11 +9,11 @@
 
     <div class="search-container">
       <mat-icon class="search-icon">search</mat-icon>
-      <input 
-        type="text" 
-        [(ngModel)]="searchClient" 
-        placeholder="Buscar por cliente" 
-        (keyup.enter)="searchByClient()" 
+      <input
+        type="text"
+        [(ngModel)]="searchClient"
+        placeholder="Buscar por cliente"
+        (keyup.enter)="searchByClient()"
       />
     </div>
 
@@ -31,8 +31,8 @@
           <th>Plano</th>
           <th>Descrição</th>
           <th>Preço</th>
-          <th>Vencimento</th>
           <th>Início</th>
+          <th>Vencimento</th>
           <th>Status</th>
           <th>Ações</th>
         </tr>
@@ -44,21 +44,21 @@
           <td>{{ service.plans }}</td>
           <td>{{ service.description }}</td>
           <td>{{ service.price | currency:'BRL' }}</td>
-          <td>{{ service.due_date | date:'dd/MM/yyyy' }}</td>
           <td>{{ service.started_at | date:'dd/MM/yyyy' }}</td>
+          <td>{{ service.due_date | date:'dd/MM/yyyy' }}</td>
           <td>
             <span [ngClass]="getStatusClass(service.status)">
               {{ getStatusLabel(service.status) }}
             </span>
           </td>
           <td>
-            <button 
+            <button
               class="btn-action btn-edit"
               (click)="openEditDialog(service)"
               title="Editar">
               <mat-icon>edit</mat-icon>
             </button>
-            <button 
+            <button
               class="btn-action btn-delete"
               (click)="deleteService(service)"
               title="Excluir">
@@ -70,9 +70,9 @@
     </table>
 
     <div class="paginator">
-      <mat-paginator 
-        [length]="filteredServices.length" 
-        [pageSize]="10" 
+      <mat-paginator
+        [length]="filteredServices.length"
+        [pageSize]="10"
         (page)="onPageChange($event)">
       </mat-paginator>
     </div>

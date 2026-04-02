@@ -195,4 +195,10 @@ class PaymentController extends Controller
     }
 
 
+    public function dashboard(){
+        // Retorna todos os pagamentos para o dashboard calcular
+        $payments = Payment::with('service')->get();
+
+        return response()->json($payments);
+    }
 }

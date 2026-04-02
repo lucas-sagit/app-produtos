@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClientService } from '../../../services/client.service';
 import { PaymentService } from '../../../services/payment.service';
@@ -12,6 +12,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { OpenNotificationComponent } from '../open-notification/openNotification';
 import { Chart, registerables } from 'chart.js';
 import { BaseChartDirective } from '../../directives/base-chart.directive';
+import { Subscription } from 'rxjs';
 
 Chart.register(...registerables);
 
@@ -31,7 +32,7 @@ Chart.register(...registerables);
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard implements OnInit {
+export class Dashboard implements OnInit, OnDestroy {
   totalClients = 0;
   totalPayments = 0;
   totalServices = 0;
@@ -47,11 +48,28 @@ export class Dashboard implements OnInit {
     late: 0
   };
 
-  // Dados do gráfico
-  pieChartData: any = {};
-  pieChartOptions: any = {};
+  // Dados do gráfico - inicializado com estrutura vazia
+  pieChartData: any = {
+    labels: [],
+    datasets: [{
+      data: [],
+      backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+      borderWidth: 0
+    }]
+  };
+  pieChartOptions: any = {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        display: false
+      }
+    }
+  };
   pieChartType: 'pie' | 'doughnut' = 'doughnut';
-  chartLegend: { label: string; value: string; color: string }[] = [];
+  chartLegend: { label: string; value: number; color: string }[] = [];
+
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private clientService: ClientService,
@@ -67,15 +85,26 @@ export class Dashboard implements OnInit {
     this.loadCurrentMonthData();
   }
 
+  logout(): void {
+    localStorage.removeItem('authToken');
+    window.location.href = '/login';
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
   loadTotals(): void {
-    this.clientService.getClients().subscribe({
+    let sub = this.clientService.getClients().subscribe({
       next: (clients) => this.totalClients = clients?.length ?? 0,
       error: (err) => {
         console.error('Erro ao buscar clientes:', err);
         this.totalClients = 0;
       }
     });
-    this.paymentService.getPayments().subscribe({
+    this.subscriptions.push(sub);
+
+    sub = this.paymentService.getPayments().subscribe({
       next: (payments) => {
         this.totalPayments = payments?.length ?? 0;
         this.status.total = payments?.length ?? 0;
@@ -88,24 +117,29 @@ export class Dashboard implements OnInit {
         this.totalPayments = 0;
       }
     });
-    this.serviceService.getServices().subscribe({
+    this.subscriptions.push(sub);
+
+    sub = this.serviceService.getServices().subscribe({
       next: (services) => this.totalServices = services?.length ?? 0,
       error: (err) => {
         console.error('Erro ao buscar serviços:', err);
         this.totalServices = 0;
       }
     });
-    this.productsService.getProducts().subscribe({
+    this.subscriptions.push(sub);
+
+    sub = this.productsService.getProducts().subscribe({
       next: (products) => this.totalProducts = products?.length ?? 0,
       error: (err) => {
         console.error('Erro ao buscar produtos:', err);
         this.totalProducts = 0;
       }
     });
+    this.subscriptions.push(sub);
   }
 
   openNotifications(): void {
-    this.paymentService.getNotifications().subscribe({
+    const sub = this.paymentService.getNotifications().subscribe({
       next: (res) => {
         this.dialog.open(OpenNotificationComponent, {
           width: '500px',
@@ -116,10 +150,11 @@ export class Dashboard implements OnInit {
         console.error('Erro ao carregar notificações:', err);
       }
     });
+    this.subscriptions.push(sub);
   }
 
   loadNotifications() {
-    this.paymentService.getNotifications().subscribe({
+    const sub = this.paymentService.getNotifications().subscribe({
       next: (res) => {
         this.notificationsCount = res.count;
         this.notifications = res.data;
@@ -130,36 +165,59 @@ export class Dashboard implements OnInit {
         this.notifications = [];
       }
     });
+    this.subscriptions.push(sub);
   }
 
   loadCurrentMonthData(): void {
     const now = new Date();
-    const currentMonth = now.getMonth(); // 0-11
+    const currentMonth = now.getMonth();
     const currentYear = now.getFullYear();
 
-    this.paymentService.getPayments().subscribe({
+    console.log('Dashboard: Carregando dados do mês', currentMonth, currentYear);
+
+    const sub = this.paymentService.getDashboardPayments().subscribe({
       next: (payments) => {
-        // Filtra pagamentos do mês atual
-        const currentMonthPayments = payments.filter(p => {
-          // Parse da data no formato YYYY-MM-DD
-          const dueDateParts = p.due_date.split('-');
-          const dueDateYear = parseInt(dueDateParts[0], 10);
-          const dueDateMonth = parseInt(dueDateParts[1], 10) - 1; // 0-11
-          return dueDateMonth === currentMonth && dueDateYear === currentYear;
-        });
+        console.log('Dashboard: Pagamentos recebidos', payments);
 
-        // Calcula valores por status
-        const pendingAmount = currentMonthPayments
-          .filter(p => p.status === 'pending')
-          .reduce((sum, p) => sum + (p.amount || 0), 0);
-        const paidAmount = currentMonthPayments
-          .filter(p => p.status === 'paid')
-          .reduce((sum, p) => sum + (p.amount || 0), 0);
-        const lateAmount = currentMonthPayments
-          .filter(p => p.status === 'late')
-          .reduce((sum, p) => sum + (p.amount || 0), 0);
+        if (!payments || !Array.isArray(payments)) {
+          console.warn('Dashboard: Dados inválidos');
+          this.initializeEmptyChart();
+          return;
+        }
 
-        // Configura dados do gráfico (valores)
+        // 🔥 Pagamentos PAGOS (usa paid_at)
+        const paidAmount = payments
+          .filter(p => {
+            if (!p.paid_at) return false;
+            const date = new Date(p.paid_at);
+            return date.getMonth() === currentMonth &&
+              date.getFullYear() === currentYear;
+          })
+          .reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+
+        // 🔥 Pendentes (usa due_date)
+        const pendingAmount = payments
+          .filter(p => {
+            if (p.status !== 'pending') return false;
+            if (!p.due_date) return false;
+            const date = new Date(p.due_date);
+            return date.getMonth() === currentMonth &&
+              date.getFullYear() === currentYear;
+          })
+          .reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+
+        const lateAmount = payments
+          .filter(p => {
+            if (p.status !== 'late') return false;
+            if (!p.due_date) return false;
+            const date = new Date(p.due_date);
+            return date.getMonth() === currentMonth &&
+              date.getFullYear() === currentYear;
+          })
+          .reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+
+        console.log('Dashboard: Valores calculados', { paidAmount, pendingAmount, lateAmount });
+
         this.pieChartData = {
           labels: ['Pagos', 'Pendentes', 'Atrasados'],
           datasets: [{
@@ -169,35 +227,36 @@ export class Dashboard implements OnInit {
           }]
         };
 
-        // Configura opções do gráfico
-        this.pieChartOptions = {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false
-            },
-            tooltip: {
-              callbacks: {
-                label: (context: any) => {
-                  const value = context.raw;
-                  return `R$ ${value.toFixed(2)}`;
-                }
-              }
-            }
-          }
-        };
-
-        // Configura legenda personalizada
         this.chartLegend = [
-          { label: 'Pagos', value: `R$ ${paidAmount.toFixed(2)}`, color: '#10b981' },
-          { label: 'Pendentes', value: `R$ ${pendingAmount.toFixed(2)}`, color: '#f59e0b' },
-          { label: 'Atrasados', value: `R$ ${lateAmount.toFixed(2)}`, color: '#ef4444' }
+          { label: 'Pagos', value: paidAmount, color: '#10b981' },
+          { label: 'Pendentes', value: pendingAmount, color: '#f59e0b' },
+          { label: 'Atrasados', value: lateAmount, color: '#ef4444' }
         ];
+
+        console.log('Dashboard: Dados do gráfico atualizados', this.pieChartData);
       },
+
       error: (err) => {
-        console.error('Erro ao buscar pagamentos do mês:', err);
+        console.error('Erro ao buscar dados do dashboard:', err);
+        this.initializeEmptyChart();
       }
     });
+    this.subscriptions.push(sub);
+  }
+
+  initializeEmptyChart(): void {
+    this.pieChartData = {
+      labels: ['Pagos', 'Pendentes', 'Atrasados'],
+      datasets: [{
+        data: [0, 0, 0],
+        backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+        borderWidth: 0
+      }]
+    };
+    this.chartLegend = [
+      { label: 'Pagos', value: 0, color: '#10b981' },
+      { label: 'Pendentes', value: 0, color: '#f59e0b' },
+      { label: 'Atrasados', value: 0, color: '#ef4444' }
+    ];
   }
 }

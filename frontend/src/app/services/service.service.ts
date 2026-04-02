@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Service } from '../models/service';
+import { Payment } from '../shared/services/payment/payment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServiceService {
-  private apiUrl = 'http://localhost:8000/api/services';
+  private apiUrl = '/api/services';
 
   constructor(private http: HttpClient) { }
 
@@ -30,4 +31,6 @@ export class ServiceService {
   deleteService(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+
 }
+

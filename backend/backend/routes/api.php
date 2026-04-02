@@ -16,6 +16,7 @@ Route::apiResource('users', userController::class);
 Route::apiResource('clients', ClientController::class);
 // Route::put('/clients/{id}', [ClientController::class, 'update']);
 Route::apiResource('services', ServiceController::class);
+Route::get('payments/dashboard', [PaymentController::class, 'dashboard']);
 
 // Rotas específicas de pagamentos (devem vir antes do apiResource)
 Route::get('payments/notification', [notificationController::class, 'notification']);

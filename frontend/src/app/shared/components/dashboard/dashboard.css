@@ -76,6 +76,15 @@ body {
   font-weight: 600;
 }
 
+.logout {
+  color: white;
+  margin-top: auto;
+  background: none;
+  border: none;
+  text-align: start;
+  padding: 0px 10px;
+}
+
 /* CONTEÚDO PRINCIPAL */
 .main-content {
   margin-left: 260px;
@@ -121,16 +130,16 @@ body {
   min-width: 18px;
 }
 
-/* CARDS DASHBOARD */
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 25px;
 }
 
-.mat-icon-button  {
+.mat-icon-button {
   color: black;
 }
+
 .card {
   background: white;
   padding: 30px;
@@ -181,11 +190,11 @@ body {
 }
 
 .card-paid {
-  border-left-color:#10b981;
+  border-left-color: #10b981;
 }
 
-.card-late{
-  border-left-color:#1f2937;
+.card-late {
+  border-left-color: #1f2937;
 }
 
 .card-products .card-icon {

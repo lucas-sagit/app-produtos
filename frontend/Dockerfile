@@ -10,5 +10,5 @@ COPY . .
 
 EXPOSE 4200
 
-# Use npx to run ng serve with host 0.0.0.0
-CMD ["npx", "ng", "serve", "--host", "0.0.0.0", "--poll", "2000"]
+# CMD padrão - pode ser sobrescrito pelo docker-compose
+CMD ["npx", "ng", "serve", "--host", "0.0.0.0"]

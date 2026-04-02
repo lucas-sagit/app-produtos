@@ -10,6 +10,9 @@
         <li><a routerLink="/list" routerLinkActive="active">Estoque</a></li>
       </ul>
     </nav>
+    <button (click)="logout()" class="logout">
+      <mat-icon>logout</mat-icon>
+    </button>
   </aside>
   <main class="main-content">
     <div class="dashboard-header">
@@ -91,14 +94,15 @@
         <canvas baseChart
           [data]="pieChartData"
           [options]="pieChartOptions"
-          [chartType]="pieChartType">
+          [chartType]="pieChartType"
+          style="max-height: 300px;">
         </canvas>
       </div>
       <div class="chart-legend">
         <div class="legend-item" *ngFor="let item of chartLegend">
           <span class="legend-color" [style.background-color]="item.color"></span>
           <span class="legend-label">{{ item.label }}</span>
-          <span class="legend-value">{{ item.value }}</span>
+          <span class="legend-value">{{ item.value | currency:'BRL' }}</span>
         </div>
       </div>
     </div>
