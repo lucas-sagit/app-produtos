@@ -19,7 +19,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->string('others');
             $table->string('quantity');
-            $table->string('image_url');
+            $table->text('image_url');
             $table->timestamps();
         });
     }

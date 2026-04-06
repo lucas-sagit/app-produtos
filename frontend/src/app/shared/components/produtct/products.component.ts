@@ -4,6 +4,7 @@ import { Product } from '../../interface/product.interface';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { GoBack } from '../go_Back/goBack';
+import { Categories } from '../../interface/categories';
 
 @Component({
   selector: 'app-products-component',
@@ -19,6 +20,12 @@ export class ProductsComponent implements OnInit {
   formGroup: FormGroup;
   products: Product[] = [];
   error: string | null = null;
+
+  categories: Categories[] = [
+    {id: 1, name: 'Roteador'},
+    {id: 2, name: 'Switch'},
+    {id: 3, name: 'Papelaria'}
+  ]
 
   constructor(
     private productService: ProductService,
