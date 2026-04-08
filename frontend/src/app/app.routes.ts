@@ -6,8 +6,7 @@ import { Dashboard } from './shared/components/dashboard/dashboard';
 import { ClientsComponent } from './shared/components/clients/clients';
 import { PaymentsComponent } from './shared/components/payments/payments';
 import { ServicesComponent } from './shared/components/service/services';
-import { AuthGuard } from './guards/auth-guard';
-import { GoBack } from './shared/components/go_Back/goBack';
+import { AuthGuard } from './shared/services/auth/auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
