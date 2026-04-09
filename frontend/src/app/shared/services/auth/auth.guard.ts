@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, Router, UrlTree } from '@angular/router';
 import { Auth } from '../../../services/auth.service';
 
 @Injectable({
@@ -7,9 +7,9 @@ import { Auth } from '../../../services/auth.service';
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private auth: Auth, private router: Router) {}
+  constructor(private auth: Auth, private router: Router) { }
 
-  canActivate(): boolean {
+  canActivate(): boolean | UrlTree {
     if (this.auth.isLoggedIn()) {
       return true;
     } else {
@@ -18,3 +18,5 @@ export class AuthGuard implements CanActivate {
     }
   }
 }
+
+

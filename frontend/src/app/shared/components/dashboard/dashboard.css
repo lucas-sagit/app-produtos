@@ -356,3 +356,39 @@ body {
   min-width: 80px;
   text-align: right;
 }
+
+/* DATE FILTER */
+.date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.date button,
+.clear-filter-btn {
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.date button:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.clear-filter-btn {
+  color: #ef4444;
+}
+
+.clear-filter-btn:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.date-input {
+  display: none !important;
+}
+
+/* Datepicker personalizado */
+::ng-deep .mat-datepicker-toggle {
+  color: #1f2937;
+}

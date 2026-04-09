@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ClientService } from '../../../services/client.service';
 import { PaymentService } from '../../../services/payment.service';
 import { ServiceService } from '../../../services/service.service';
@@ -9,6 +10,10 @@ import { MatIcon } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { OpenNotificationComponent } from '../open-notification/openNotification';
 import { Chart, registerables } from 'chart.js';
 import { BaseChartDirective } from '../../directives/base-chart.directive';
@@ -20,13 +25,19 @@ Chart.register(...registerables);
   selector: 'app-dashboard',
   imports: [
     CommonModule,
+    FormsModule,
     RouterLink,
     RouterLinkActive,
     MatIcon,
     MatButtonModule,
     MatBadgeModule,
     MatDialogModule,
-    BaseChartDirective
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatInputModule,
+    MatFormFieldModule,
+    BaseChartDirective,
+
   ],
   standalone: true,
   templateUrl: './dashboard.html',
@@ -47,6 +58,11 @@ export class Dashboard implements OnInit, OnDestroy {
     paid: 0,
     late: 0
   };
+
+  // Filtro por data
+  selectedDate: Date | null = null;
+  allPayments: any[] = [];
+  isFiltered = false;
 
   // Dados do gráfico - inicializado com estrutura vazia
   pieChartData: any = {
@@ -106,15 +122,13 @@ export class Dashboard implements OnInit, OnDestroy {
 
     sub = this.paymentService.getPayments().subscribe({
       next: (payments) => {
-        this.totalPayments = payments?.length ?? 0;
-        this.status.total = payments?.length ?? 0;
-        this.status.pending = payments?.filter(p => p.status === 'pending')?.length ?? 0;
-        this.status.paid = payments?.filter(p => p.status === 'paid')?.length ?? 0;
-        this.status.late = payments?.filter(p => p.status === 'late')?.length ?? 0;
+        this.allPayments = payments || [];
+        this.updatePaymentStats();
       },
       error: (err) => {
         console.error('Erro ao buscar pagamentos:', err);
         this.totalPayments = 0;
+        this.allPayments = [];
       }
     });
     this.subscriptions.push(sub);
@@ -136,6 +150,51 @@ export class Dashboard implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.push(sub);
+  }
+
+  // Atualiza as estatísticas de pagamentos (total, pendentes, pagos, atrasados)
+  updatePaymentStats(): void {
+    let payments = this.allPayments;
+
+    // Se uma data está selecionada, filtra por essa data específica
+    if (this.selectedDate) {
+      const selectedDay = this.selectedDate.getDate();
+      const selectedMonth = this.selectedDate.getMonth();
+      const selectedYear = this.selectedDate.getFullYear();
+
+      payments = payments.filter(p => {
+        // Tenta usar due_date como data principal de comparação
+        const dateToCheck = p.due_date || p.paid_at;
+        if (!dateToCheck) return false;
+
+        const date = new Date(dateToCheck);
+        return date.getDate() === selectedDay &&
+          date.getMonth() === selectedMonth &&
+          date.getFullYear() === selectedYear;
+      });
+    }
+
+    this.totalPayments = payments?.length ?? 0;
+    this.status.total = payments?.length ?? 0;
+    this.status.pending = payments?.filter(p => p.status === 'pending')?.length ?? 0;
+    this.status.paid = payments?.filter(p => p.status === 'paid')?.length ?? 0;
+    this.status.late = payments?.filter(p => p.status === 'late')?.length ?? 0;
+  }
+
+  // Callback quando a data é alterada no datepicker
+  onDateChange(event: any): void {
+    this.selectedDate = event.value;
+    this.isFiltered = !!this.selectedDate;
+    this.updatePaymentStats();
+    this.loadCurrentMonthData();
+  }
+
+  // Limpa o filtro de data
+  clearDateFilter(): void {
+    this.selectedDate = null;
+    this.isFiltered = false;
+    this.updatePaymentStats();
+    this.loadCurrentMonthData();
   }
 
   openNotifications(): void {
@@ -169,11 +228,17 @@ export class Dashboard implements OnInit, OnDestroy {
   }
 
   loadCurrentMonthData(): void {
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
+    const now = this.selectedDate || new Date();
+    let currentMonth = now.getMonth();
+    let currentYear = now.getFullYear();
+    let compareDay: number | null = null;
 
-    console.log('Dashboard: Carregando dados do mês', currentMonth, currentYear);
+    // Se uma data específica foi selecionada, filtra para aquele dia
+    if (this.selectedDate) {
+      compareDay = this.selectedDate.getDate();
+    }
+
+    console.log('Dashboard: Carregando dados', { currentMonth, currentYear, compareDay });
 
     const sub = this.paymentService.getDashboardPayments().subscribe({
       next: (payments) => {
@@ -190,8 +255,13 @@ export class Dashboard implements OnInit, OnDestroy {
           .filter(p => {
             if (!p.paid_at) return false;
             const date = new Date(p.paid_at);
-            return date.getMonth() === currentMonth &&
+            const monthYearMatch = date.getMonth() === currentMonth &&
               date.getFullYear() === currentYear;
+
+            if (compareDay !== null) {
+              return monthYearMatch && date.getDate() === compareDay;
+            }
+            return monthYearMatch;
           })
           .reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
 
@@ -201,8 +271,13 @@ export class Dashboard implements OnInit, OnDestroy {
             if (p.status !== 'pending') return false;
             if (!p.due_date) return false;
             const date = new Date(p.due_date);
-            return date.getMonth() === currentMonth &&
+            const monthYearMatch = date.getMonth() === currentMonth &&
               date.getFullYear() === currentYear;
+
+            if (compareDay !== null) {
+              return monthYearMatch && date.getDate() === compareDay;
+            }
+            return monthYearMatch;
           })
           .reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
 
@@ -211,8 +286,13 @@ export class Dashboard implements OnInit, OnDestroy {
             if (p.status !== 'late') return false;
             if (!p.due_date) return false;
             const date = new Date(p.due_date);
-            return date.getMonth() === currentMonth &&
+            const monthYearMatch = date.getMonth() === currentMonth &&
               date.getFullYear() === currentYear;
+
+            if (compareDay !== null) {
+              return monthYearMatch && date.getDate() === compareDay;
+            }
+            return monthYearMatch;
           })
           .reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
 

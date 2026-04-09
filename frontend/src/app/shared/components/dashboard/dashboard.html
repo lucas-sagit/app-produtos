@@ -17,7 +17,34 @@
   <main class="main-content">
     <div class="dashboard-header">
       <p>Visão geral do sistema</p>
+
       <div class="notification">
+
+        <div class="date">
+          <input
+            matInput
+            [matDatepicker]="picker"
+            [(ngModel)]="selectedDate"
+            (dateChange)="onDateChange($event)"
+            placeholder="Selecionar data"
+            class="date-input"
+            style="display: none;">
+          <mat-datepicker #picker></mat-datepicker>
+
+          <button mat-icon-button (click)="picker.open()">
+            <mat-icon>calendar_today</mat-icon>
+          </button>
+
+          <button
+            *ngIf="isFiltered"
+            mat-icon-button
+            (click)="clearDateFilter()"
+            title="Limpar filtro"
+            class="clear-filter-btn">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
         <button mat-icon-button (click)="openNotifications()">
           <mat-icon matBadge="{{ notificationsCount }}" matBadgeColor="warn" *ngIf="notificationsCount > 0">
             notifications
@@ -89,12 +116,13 @@
 
     <!-- Gráfico de Pizza -->
     <div class="chart-container">
-      <h3>Resumo do Mês Atual</h3>
+      <h3>
+        Resumo
+        <span *ngIf="isFiltered">- {{ selectedDate | date:'dd/MM/yyyy' }}</span>
+        <span *ngIf="!isFiltered">do Mês Atual</span>
+      </h3>
       <div class="chart-wrapper">
-        <canvas baseChart
-          [data]="pieChartData"
-          [options]="pieChartOptions"
-          [chartType]="pieChartType"
+        <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [chartType]="pieChartType"
           style="max-height: 300px;">
         </canvas>
       </div>

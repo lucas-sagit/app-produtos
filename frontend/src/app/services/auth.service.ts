@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { LoginComponent } from '../shared/components/login/login.component';
 
 @Injectable({
   providedIn: 'root'
@@ -18,4 +19,6 @@ export class Auth {
     // Aqui você poderia validar se o token não está expirado
     return !!token;
   }
+
 }
+
