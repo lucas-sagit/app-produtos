@@ -19,6 +19,7 @@ import { Chart, registerables } from 'chart.js';
 import { BaseChartDirective } from '../../directives/base-chart.directive';
 import { Subscription } from 'rxjs';
 
+
 Chart.register(...registerables);
 
 @Component({

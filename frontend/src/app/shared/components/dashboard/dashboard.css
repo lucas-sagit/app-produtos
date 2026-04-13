@@ -109,8 +109,10 @@ body {
 }
 
 .notification {
-  display: flex;
+   display: flex;
   align-items: center;
+  gap: 10px;
+  position: relative;
 }
 
 .notification button {
@@ -359,9 +361,7 @@ body {
 
 /* DATE FILTER */
 .date {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  margin-right: 20px;
 }
 
 .date button,
@@ -391,4 +391,13 @@ body {
 /* Datepicker personalizado */
 ::ng-deep .mat-datepicker-toggle {
   color: #1f2937;
+}
+
+::ng-deep .cdk-overlay-pane {
+  transform: translateX(50px) !important;
+}
+
+::ng-deep .cdk-overlay-pane .mat-datepicker-content {
+  margin-left: 1350px !important;
+  margin-top: 80px !important;
 }
