@@ -10,11 +10,11 @@ class Client extends Model
 
     protected $fillable = [
         'status_client',
+        'cpf',
         'name',
         'corporate_name',
-        'phone',
-        'cpf',
         'cnpj',
+        'phone',
         'city',
         'address',
         'street',

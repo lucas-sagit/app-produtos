@@ -30,11 +30,11 @@ class ClientController extends Controller
     {
         $validated = $request->validate([
             'status_client' => 'boolean',
-            'name' => 'required|string',
-            'corporate_name' => 'nullable|string',
-            'phone' => 'required|string',
+            'name' => 'string',
             'cpf' => 'nullable|string|unique:clients,cpf',
+            'corporate_name' => 'nullable|string',
             'cnpj' => 'nullable|string|unique:clients,cnpj',
+            'phone' => 'required|string',
             'city' => 'required|string',
             'address' => 'required|string',
             'street' => 'required|string',
@@ -74,8 +74,8 @@ class ClientController extends Controller
     {
         $validated = $request->validate([
             'status_client' => 'boolean',
-            'name' => 'required|string',
-            'corporate_name' => 'nullable|string',
+            'name' => 'string',
+            'corporate_name' => 'string',
             'cpf' => 'nullable|string|unique:clients,cpf,' . $id,
             'cnpj' => 'nullable|string|unique:clients,cnpj,' . $id,
             'city' => 'required|string',
