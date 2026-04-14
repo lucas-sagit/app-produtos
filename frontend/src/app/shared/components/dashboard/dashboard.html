@@ -19,7 +19,6 @@
       <p>Visão geral do sistema</p>
 
       <div class="notification">
-
         <div class="date">
           <input
             matInput
@@ -93,25 +92,6 @@
           <p class="total">{{ status.pending }}</p>
         </div>
       </div>
-
-      <!-- PAGOS -->
-      <!-- <div class="card card-paid">
-        <div class="card-icon">✅</div>
-        <div class="card-content">
-          <h3>Pagos</h3>
-          <p class="total">{{ status.paid }}</p>
-        </div>
-      </div> -->
-
-      <!-- ATRASADOS -->
-      <!-- <div class="card card-late">
-        <div class="card-icon">⚠️</div>
-        <div class="card-content">
-          <h3>Atrasados</h3>
-          <p class="total">{{ status.late }}</p>
-        </div>
-      </div> -->
-
     </div>
 
     <!-- Gráfico de Pizza -->
@@ -119,7 +99,7 @@
       <h3>
         Resumo
         <span *ngIf="isFiltered">- {{ selectedDate | date:'dd/MM/yyyy' }}</span>
-        <span *ngIf="!isFiltered">do Mês Atual</span>
+        <!-- <span *ngIf="!isFiltered">do Mês Atual</span> -->
       </h3>
       <div class="chart-wrapper">
         <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [chartType]="pieChartType"

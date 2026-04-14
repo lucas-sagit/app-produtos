@@ -5,8 +5,8 @@ export interface Client {
   status_client: boolean;
   name: string;
   cpf: string;
-  cnpj?: string;
   corporate_name?: string;
+  cnpj?: string;
   phone?: string;
   city?: string;
   number?: string;

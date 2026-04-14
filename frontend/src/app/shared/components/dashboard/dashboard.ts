@@ -154,12 +154,12 @@ export class Dashboard implements OnInit, OnDestroy {
   }
 
   // Atualiza as estatísticas de pagamentos (total, pendentes, pagos, atrasados)
+  // Filtra por período mensal conforme a data selecionada
   updatePaymentStats(): void {
     let payments = this.allPayments;
 
-    // Se uma data está selecionada, filtra por essa data específica
+    // Se uma data está selecionada, filtra por todo o mês dessa data
     if (this.selectedDate) {
-      const selectedDay = this.selectedDate.getDate();
       const selectedMonth = this.selectedDate.getMonth();
       const selectedYear = this.selectedDate.getFullYear();
 
@@ -169,8 +169,7 @@ export class Dashboard implements OnInit, OnDestroy {
         if (!dateToCheck) return false;
 
         const date = new Date(dateToCheck);
-        return date.getDate() === selectedDay &&
-          date.getMonth() === selectedMonth &&
+        return date.getMonth() === selectedMonth &&
           date.getFullYear() === selectedYear;
       });
     }
@@ -232,14 +231,8 @@ export class Dashboard implements OnInit, OnDestroy {
     const now = this.selectedDate || new Date();
     let currentMonth = now.getMonth();
     let currentYear = now.getFullYear();
-    let compareDay: number | null = null;
 
-    // Se uma data específica foi selecionada, filtra para aquele dia
-    if (this.selectedDate) {
-      compareDay = this.selectedDate.getDate();
-    }
-
-    console.log('Dashboard: Carregando dados', { currentMonth, currentYear, compareDay });
+    console.log('Dashboard: Carregando dados do período mensal', { currentMonth: currentMonth + 1, currentYear });
 
     const sub = this.paymentService.getDashboardPayments().subscribe({
       next: (payments) => {
@@ -256,13 +249,8 @@ export class Dashboard implements OnInit, OnDestroy {
           .filter(p => {
             if (!p.paid_at) return false;
             const date = new Date(p.paid_at);
-            const monthYearMatch = date.getMonth() === currentMonth &&
+            return date.getMonth() === currentMonth &&
               date.getFullYear() === currentYear;
-
-            if (compareDay !== null) {
-              return monthYearMatch && date.getDate() === compareDay;
-            }
-            return monthYearMatch;
           })
           .reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
 
@@ -272,32 +260,25 @@ export class Dashboard implements OnInit, OnDestroy {
             if (p.status !== 'pending') return false;
             if (!p.due_date) return false;
             const date = new Date(p.due_date);
-            const monthYearMatch = date.getMonth() === currentMonth &&
+            return date.getMonth() === currentMonth &&
               date.getFullYear() === currentYear;
-
-            if (compareDay !== null) {
-              return monthYearMatch && date.getDate() === compareDay;
-            }
-            return monthYearMatch;
           })
           .reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
 
         const lateAmount = payments
           .filter(p => {
-            if (p.status !== 'late') return false;
             if (!p.due_date) return false;
-            const date = new Date(p.due_date);
-            const monthYearMatch = date.getMonth() === currentMonth &&
-              date.getFullYear() === currentYear;
 
-            if (compareDay !== null) {
-              return monthYearMatch && date.getDate() === compareDay;
-            }
-            return monthYearMatch;
+            const dueDate = new Date(p.due_date);
+            const today = new Date();
+
+            // 🔥 Regra correta: venceu e não foi pago
+            return (
+              dueDate < today &&
+              p.status !== 'paid'
+            );
           })
           .reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
-
-        console.log('Dashboard: Valores calculados', { paidAmount, pendingAmount, lateAmount });
 
         this.pieChartData = {
           labels: ['Pagos', 'Pendentes', 'Atrasados'],
@@ -313,8 +294,6 @@ export class Dashboard implements OnInit, OnDestroy {
           { label: 'Pendentes', value: pendingAmount, color: '#f59e0b' },
           { label: 'Atrasados', value: lateAmount, color: '#ef4444' }
         ];
-
-        console.log('Dashboard: Dados do gráfico atualizados', this.pieChartData);
       },
 
       error: (err) => {

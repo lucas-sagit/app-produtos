@@ -393,11 +393,16 @@ body {
   color: #1f2937;
 }
 
-::ng-deep .cdk-overlay-pane {
-  transform: translateX(50px) !important;
+::ng-deep .cdk-overlay-pane.mat-datepicker-popup {
+  left: auto !important;
+  right: 24px !important;
+  margin-top: 70px !important;
+  transform: none !important;
 }
 
-::ng-deep .cdk-overlay-pane .mat-datepicker-content {
-  margin-left: 1350px !important;
-  margin-top: 80px !important;
+@media (max-width: 768px) {
+  ::ng-deep .cdk-overlay-pane.mat-datepicker-popup {
+    right: 12px !important;
+    /* margin-top: 20px !important; */
+  }
 }
