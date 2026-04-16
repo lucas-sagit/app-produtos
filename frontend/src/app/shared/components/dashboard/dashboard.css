@@ -109,10 +109,11 @@ body {
 }
 
 .notification {
-   display: flex;
+  display: flex;
   align-items: center;
   gap: 10px;
   position: relative;
+  align-items: center;
 }
 
 .notification button {

@@ -1,0 +1,71 @@
+<div class="date-wrapper">
+
+  <!-- Botão -->
+  <button class="open-btn" (click)="toggleCalendar()">
+    <mat-icon> calendar_today </mat-icon>
+  </button>
+
+
+  <!-- Popup -->
+  <div class="calendar-popup" *ngIf="isOpen">
+    <!-- Modo -->
+    <div class="mode-switch">
+      <button
+        [class.active]="modo === 'range'"
+        (click)="modo = 'range'">
+        Intervalo
+      </button>
+
+      <button
+        [class.active]="modo === 'multiple'"
+        (click)="modo = 'multiple'">
+        Múltiplos
+      </button>
+    </div>
+
+    <!-- Header -->
+    <div class="calendar-header">
+      <button (click)="prevMonth()">◀</button>
+      <span>{{ currentMonthName }} {{ currentYear }}</span>
+      <button (click)="nextMonth()">▶</button>
+    </div>
+
+    <!-- Dias da semana -->
+    <div class="calendar-grid">
+      <div class="day-name" *ngFor="let d of weekDays">
+        {{ d }}
+      </div>
+
+      <!-- Dias -->
+      <div
+        *ngFor="let day of calendarDays"
+        class="day"
+        [class.selected]="isSelected(day)"
+        (click)="toggleDate(day)"
+      >
+        {{ day.getDate() }}
+      </div>
+    </div>
+
+    <!-- Info seleção -->
+    <div class="selected-info">
+
+      <ng-container *ngIf="modo === 'multiple'">
+        {{ selectedDates.length }} dias selecionados
+      </ng-container>
+
+      <ng-container *ngIf="modo === 'range' && startDate">
+        {{ startDate | date:'dd/MM' }}
+        <span *ngIf="endDate"> - {{ endDate | date:'dd/MM' }}</span>
+      </ng-container>
+
+    </div>
+
+    <!-- Ações -->
+    <div class="actions">
+      <button (click)="clearSelection()">Limpar</button>
+      <button (click)="close()">OK</button>
+    </div>
+
+  </div>
+</div>

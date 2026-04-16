@@ -18,6 +18,7 @@ import { OpenNotificationComponent } from '../open-notification/openNotification
 import { Chart, registerables } from 'chart.js';
 import { BaseChartDirective } from '../../directives/base-chart.directive';
 import { Subscription } from 'rxjs';
+import { DateComponent } from '../date/date';
 
 
 Chart.register(...registerables);
@@ -38,11 +39,12 @@ Chart.register(...registerables);
     MatInputModule,
     MatFormFieldModule,
     BaseChartDirective,
-
+    DateComponent
   ],
   standalone: true,
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
+
 })
 export class Dashboard implements OnInit, OnDestroy {
   totalClients = 0;
@@ -61,7 +63,8 @@ export class Dashboard implements OnInit, OnDestroy {
   };
 
   // Filtro por data
-  selectedDate: Date | null = null;
+  // selectedDate: Date | null = null;
+  dateFilter: any = null;
   allPayments: any[] = [];
   isFiltered = false;
 
@@ -97,7 +100,6 @@ export class Dashboard implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.loadTotals();
     this.loadNotifications();
     this.loadCurrentMonthData();
   }
@@ -111,91 +113,14 @@ export class Dashboard implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  loadTotals(): void {
-    let sub = this.clientService.getClients().subscribe({
-      next: (clients) => this.totalClients = clients?.length ?? 0,
-      error: (err) => {
-        console.error('Erro ao buscar clientes:', err);
-        this.totalClients = 0;
-      }
-    });
-    this.subscriptions.push(sub);
+  onDatesChange(filter: any) {
+  console.log('Filtro recebido:', filter);
 
-    sub = this.paymentService.getPayments().subscribe({
-      next: (payments) => {
-        this.allPayments = payments || [];
-        this.updatePaymentStats();
-      },
-      error: (err) => {
-        console.error('Erro ao buscar pagamentos:', err);
-        this.totalPayments = 0;
-        this.allPayments = [];
-      }
-    });
-    this.subscriptions.push(sub);
+  this.dateFilter = filter;
+  this.isFiltered = true;
 
-    sub = this.serviceService.getServices().subscribe({
-      next: (services) => this.totalServices = services?.length ?? 0,
-      error: (err) => {
-        console.error('Erro ao buscar serviços:', err);
-        this.totalServices = 0;
-      }
-    });
-    this.subscriptions.push(sub);
-
-    sub = this.productsService.getProducts().subscribe({
-      next: (products) => this.totalProducts = products?.length ?? 0,
-      error: (err) => {
-        console.error('Erro ao buscar produtos:', err);
-        this.totalProducts = 0;
-      }
-    });
-    this.subscriptions.push(sub);
-  }
-
-  // Atualiza as estatísticas de pagamentos (total, pendentes, pagos, atrasados)
-  // Filtra por período mensal conforme a data selecionada
-  updatePaymentStats(): void {
-    let payments = this.allPayments;
-
-    // Se uma data está selecionada, filtra por todo o mês dessa data
-    if (this.selectedDate) {
-      const selectedMonth = this.selectedDate.getMonth();
-      const selectedYear = this.selectedDate.getFullYear();
-
-      payments = payments.filter(p => {
-        // Tenta usar due_date como data principal de comparação
-        const dateToCheck = p.due_date || p.paid_at;
-        if (!dateToCheck) return false;
-
-        const date = new Date(dateToCheck);
-        return date.getMonth() === selectedMonth &&
-          date.getFullYear() === selectedYear;
-      });
-    }
-
-    this.totalPayments = payments?.length ?? 0;
-    this.status.total = payments?.length ?? 0;
-    this.status.pending = payments?.filter(p => p.status === 'pending')?.length ?? 0;
-    this.status.paid = payments?.filter(p => p.status === 'paid')?.length ?? 0;
-    this.status.late = payments?.filter(p => p.status === 'late')?.length ?? 0;
-  }
-
-  // Callback quando a data é alterada no datepicker
-  onDateChange(event: any): void {
-    this.selectedDate = event.value;
-    this.isFiltered = !!this.selectedDate;
-    this.updatePaymentStats();
-    this.loadCurrentMonthData();
-  }
-
-  // Limpa o filtro de data
-  clearDateFilter(): void {
-    this.selectedDate = null;
-    this.isFiltered = false;
-    this.updatePaymentStats();
-    this.loadCurrentMonthData();
-  }
+  this.loadCurrentMonthData();
+}
 
   openNotifications(): void {
     const sub = this.paymentService.getNotifications().subscribe({

@@ -1,0 +1,113 @@
+.date-wrapper {
+  position: relative;
+}
+
+.open-btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: none;
+  color: rgb(5, 4, 4);
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.open-btn:hover {
+  background:  rgba(109, 38, 38, 0.1);
+}
+
+.calendar-popup {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  left: auto;
+  background: #5b5b5b;
+  padding: 12px;
+  border-radius: 12px;
+  color: white;
+  width: 280px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  z-index: 1000;
+}
+
+.mode-switch {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.mode-switch button {
+  flex: 1;
+  margin: 2px;
+  padding: 6px;
+  border: none;
+  border-radius: 6px;
+  background: #374151;
+  color: white;
+  cursor: pointer;
+}
+
+.mode-switch button.active {
+  background: #10b981;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.day-name {
+  text-align: center;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.day {
+  text-align: center;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.day:hover {
+  background: #374151;
+}
+
+.day.selected {
+  background: #10b981;
+  color: white;
+}
+
+.selected-info {
+  margin-top: 10px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.actions button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #374151;
+  color: white;
+}
+
+.actions button:hover {
+  background: #4b5563;
+}
