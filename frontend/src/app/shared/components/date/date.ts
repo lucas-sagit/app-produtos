@@ -1,6 +1,14 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, OnDestroy, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
+import { BaseChartDirective } from '../../directives/base-chart.directive';
+import { MatDialog } from '@angular/material/dialog';
+import { ProductsService } from '../../../services/products.service';
+import { ServiceService } from '../../../services/service.service';
+import { PaymentService } from '../../../services/payment.service';
+import { ClientService } from '../../../services/client.service';
+import { Subscription } from 'rxjs/internal/Subscription';
+
 
 @Component({
   selector: 'app-date',
@@ -9,10 +17,11 @@ import { MatIcon } from '@angular/material/icon';
   styleUrls: ['./date.css'],
   imports: [
     CommonModule,
-    MatIcon
+    MatIcon,
+    BaseChartDirective
   ]
 })
-export class DateComponent implements OnInit {
+export class DateComponent implements OnInit, OnDestroy {
   totalClients = 0;
   totalPayments = 0;
   totalServices = 0;
@@ -24,6 +33,12 @@ export class DateComponent implements OnInit {
     paid: 0,
     late: 0
   };
+
+  dateFilter: any = null;
+  allPayments: any[] = [];
+  isFiltered = false;
+
+  private subscriptions: Subscription[] = [];
 
   @Output() datesSelected = new EventEmitter<any>();
 
@@ -39,8 +54,40 @@ export class DateComponent implements OnInit {
 
   weekDays = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
 
+  pieChartData: any = {
+    labels: [],
+    datasets: [{
+      data: [],
+      backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+      borderWidth: 0
+    }]
+  };
+  pieChartOptions: any = {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        display: false
+      }
+    }
+  };
+  pieChartType: 'pie' | 'doughnut' = 'doughnut';
+  chartLegend: { label: string; value: number; color: string }[] = [];
+
+  constructor(
+    private clientService: ClientService,
+    private paymentService: PaymentService,
+    private serviceService: ServiceService,
+    private productsService: ProductsService,
+    private dialog: MatDialog
+  ) { }
+
   ngOnInit(): void {
     this.generateCalendar();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   toggleCalendar() {
@@ -49,16 +96,6 @@ export class DateComponent implements OnInit {
 
   close() {
     this.isOpen = false;
-  }
-
-  onDatesCharge(filter: any){
-    console.log('Filtro recebido', filter)
-
-    this.dateFilter = filter;
-    this.isFiltered = true;
-
-    this.loadCurrentMonthData();
-
   }
 
   get currentMonthName() {
@@ -161,9 +198,5 @@ export class DateComponent implements OnInit {
         end: this.endDate
       });
     }
-  }
-
-  if(this.dateFilter){
-
   }
 }

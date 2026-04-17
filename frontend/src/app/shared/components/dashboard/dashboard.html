@@ -19,7 +19,7 @@
       <p>Visão geral do sistema</p>
 
       <div class="notification">
-        <app-date>(datesSelected="onDatesChange($event)")</app-date>
+        <app-date>(selectedDate="onDatesChange($event)")</app-date>
 
         <button mat-icon-button (click)="openNotifications()">
           <mat-icon matBadge="{{ notificationsCount }}" matBadgeColor="warn" *ngIf="notificationsCount > 0">

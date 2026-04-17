@@ -34,7 +34,6 @@ Chart.register(...registerables);
     MatButtonModule,
     MatBadgeModule,
     MatDialogModule,
-    MatDatepickerModule,
     MatNativeDateModule,
     MatInputModule,
     MatFormFieldModule,
@@ -101,7 +100,7 @@ export class Dashboard implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadNotifications();
-    this.loadCurrentMonthData();
+    this.loadAllFilteredData();
   }
 
   logout(): void {
@@ -114,13 +113,12 @@ export class Dashboard implements OnInit, OnDestroy {
   }
 
   onDatesChange(filter: any) {
-  console.log('Filtro recebido:', filter);
+    console.log('Filtro recebido:', filter);
+    this.dateFilter = filter;
+    this.isFiltered = true;
 
-  this.dateFilter = filter;
-  this.isFiltered = true;
-
-  this.loadCurrentMonthData();
-}
+    this.loadAllFilteredData();
+  }
 
   openNotifications(): void {
     const sub = this.paymentService.getNotifications().subscribe({
@@ -152,13 +150,93 @@ export class Dashboard implements OnInit, OnDestroy {
     this.subscriptions.push(sub);
   }
 
-  loadCurrentMonthData(): void {
-    const now = this.selectedDate || new Date();
-    let currentMonth = now.getMonth();
-    let currentYear = now.getFullYear();
+  private getDateRange(): { startDate: Date; endDate: Date } {
+    let startDate: Date;
+    let endDate: Date;
 
-    console.log('Dashboard: Carregando dados do período mensal', { currentMonth: currentMonth + 1, currentYear });
+    if (this.isFiltered && this.dateFilter) {
+      if (this.dateFilter.start && this.dateFilter.end) {
+        startDate = new Date(this.dateFilter.start);
+        endDate = new Date(this.dateFilter.end);
+      } else if (Array.isArray(this.dateFilter) && this.dateFilter.length > 0) {
+        startDate = new Date(this.dateFilter[0]);
+        endDate = new Date(this.dateFilter[this.dateFilter.length - 1]);
+      } else {
+        const now = new Date();
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+      }
+    } else {
+      const now = new Date();
+      startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+      endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    }
 
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
+
+    return { startDate, endDate };
+  }
+
+  private isDateInRange(date: Date, startDate: Date, endDate: Date): boolean {
+    const checkDate = new Date(date);
+    checkDate.setHours(0, 0, 0, 0);
+    return checkDate >= startDate && checkDate <= endDate;
+  }
+
+  loadAllFilteredData(): void {
+    this.loadClientsCount();
+    this.loadServicesCount();
+    this.loadPaymentsData();
+  }
+
+  private loadClientsCount(): void {
+    const sub = this.clientService.getClients().subscribe({
+      next: (clients: any) => {
+        if (!this.isFiltered) {
+          this.totalClients = clients.length || 0;
+        } else {
+          const { startDate, endDate } = this.getDateRange();
+          const filteredClients = clients.filter((client: any) => {
+            if (!client.created_at) return true;
+            return this.isDateInRange(new Date(client.created_at), startDate, endDate);
+          });
+          this.totalClients = filteredClients.length;
+        }
+        console.log('Total Clientes (filtrado):', this.totalClients);
+      },
+      error: (err) => {
+        console.error('Erro ao buscar clientes:', err);
+        this.totalClients = 0;
+      }
+    });
+    this.subscriptions.push(sub);
+  }
+
+  private loadServicesCount(): void {
+    const sub = this.serviceService.getServices().subscribe({
+      next: (services: any) => {
+        if (!this.isFiltered) {
+          this.totalServices = services.length || 0;
+        } else {
+          const { startDate, endDate } = this.getDateRange();
+          const filteredServices = services.filter((service: any) => {
+            if (!service.created_at) return true;
+            return this.isDateInRange(new Date(service.created_at), startDate, endDate);
+          });
+          this.totalServices = filteredServices.length;
+        }
+        console.log('Total Serviços (filtrado):', this.totalServices);
+      },
+      error: (err) => {
+        console.error('Erro ao buscar serviços:', err);
+        this.totalServices = 0;
+      }
+    });
+    this.subscriptions.push(sub);
+  }
+
+  private loadPaymentsData(): void {
     const sub = this.paymentService.getDashboardPayments().subscribe({
       next: (payments) => {
         console.log('Dashboard: Pagamentos recebidos', payments);
@@ -169,41 +247,43 @@ export class Dashboard implements OnInit, OnDestroy {
           return;
         }
 
-        // 🔥 Pagamentos PAGOS (usa paid_at)
+        const { startDate, endDate } = this.getDateRange();
+
         const paidAmount = payments
           .filter(p => {
             if (!p.paid_at) return false;
-            const date = new Date(p.paid_at);
-            return date.getMonth() === currentMonth &&
-              date.getFullYear() === currentYear;
+            return this.isDateInRange(new Date(p.paid_at), startDate, endDate);
           })
-          .reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+          .length;
 
-        // 🔥 Pendentes (usa due_date)
         const pendingAmount = payments
           .filter(p => {
             if (p.status !== 'pending') return false;
             if (!p.due_date) return false;
-            const date = new Date(p.due_date);
-            return date.getMonth() === currentMonth &&
-              date.getFullYear() === currentYear;
+            return this.isDateInRange(new Date(p.due_date), startDate, endDate);
           })
-          .reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+          .length;
 
         const lateAmount = payments
           .filter(p => {
             if (!p.due_date) return false;
-
             const dueDate = new Date(p.due_date);
             const today = new Date();
+            today.setHours(0, 0, 0, 0);
 
-            // 🔥 Regra correta: venceu e não foi pago
             return (
               dueDate < today &&
-              p.status !== 'paid'
+              p.status !== 'paid' &&
+              this.isDateInRange(dueDate, startDate, endDate)
             );
           })
-          .reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+          .length;
+
+        this.totalPayments = paidAmount;
+        this.status.pending = pendingAmount;
+        this.status.paid = paidAmount;
+        this.status.late = lateAmount;
+        this.status.total = paidAmount + pendingAmount + lateAmount;
 
         this.pieChartData = {
           labels: ['Pagos', 'Pendentes', 'Atrasados'],
@@ -219,6 +299,13 @@ export class Dashboard implements OnInit, OnDestroy {
           { label: 'Pendentes', value: pendingAmount, color: '#f59e0b' },
           { label: 'Atrasados', value: lateAmount, color: '#ef4444' }
         ];
+
+        console.log('Dashboard: Dados atualizados', {
+          paidAmount,
+          pendingAmount,
+          lateAmount,
+          dateRange: { startDate, endDate }
+        });
       },
 
       error: (err) => {
