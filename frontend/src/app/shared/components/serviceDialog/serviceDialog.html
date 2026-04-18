@@ -6,7 +6,7 @@
       <mat-label>Cliente</mat-label>
       <mat-select formControlName="client_id">
         <mat-option *ngFor="let client of clients" [value]="client.id">
-          {{ client.name }}
+          {{ client.name }} {{ client.corporate_name }}
         </mat-option>
       </mat-select>
       <mat-error *ngIf="form.get('client_id')?.hasError('required')">

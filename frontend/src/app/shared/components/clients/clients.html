@@ -40,13 +40,11 @@
 
         <tr *ngFor="let client of pagedClients">
           <td>{{ client.id }}</td>
-
           <td>
             <span [ngClass]="client.status_client ? 'active' : 'inactive'">
               {{ client.status_client ? 'Ativo' : 'Inativo' }}
             </span>
           </td>
-
           <td>{{ client.name }}</td>
           <td>{{ client.cpf }}</td>
           <td>{{ client.corporate_name }}</td>

@@ -28,9 +28,19 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
+
+    if(empty($data['cpf'])){
+        $data['cpf'] = null;
+    }
+
+       if(empty($data['cnpj'])){
+        $data['cnpj'] = null;
+    }
+
+
         $validated = $request->validate([
             'status_client' => 'boolean',
-            'name' => 'string',
+            'name' => 'nullable|string',
             'cpf' => 'nullable|string|unique:clients,cpf',
             'corporate_name' => 'nullable|string',
             'cnpj' => 'nullable|string|unique:clients,cnpj',

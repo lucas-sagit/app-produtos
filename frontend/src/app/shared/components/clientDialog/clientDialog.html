@@ -29,6 +29,7 @@
     Formulário inválido! Campos obrigatórios:
     <ul>
       <li *ngIf="form.get('name')?.invalid">Nome</li>
+      <li *ngIf="form.get('corporate_name')?.invalid">Razão Social</li>
       <li *ngIf="form.get('phone')?.invalid">Telefone</li>
       <li *ngIf="form.get('city')?.invalid">Cidade</li>
       <li *ngIf="form.get('address')?.invalid">Endereço</li>
