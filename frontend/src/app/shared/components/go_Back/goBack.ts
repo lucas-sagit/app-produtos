@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-go-back',
-  imports: [],
+  standalone: true,
   templateUrl: './goBack.html',
   styleUrl: './goBack.css',
 })
