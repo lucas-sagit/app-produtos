@@ -48,6 +48,7 @@ Chart.register(...registerables);
 export class Dashboard implements OnInit, OnDestroy {
   totalClients = 0;
   totalPayments = 0;
+  totalpentending = 0;
   totalServices = 0;
   totalProducts = 0;
   notificationsCount = 0;
@@ -188,6 +189,7 @@ export class Dashboard implements OnInit, OnDestroy {
     this.loadClientsCount();
     this.loadServicesCount();
     this.loadPaymentsData();
+    this.loadPendingsCount();
   }
 
   private loadClientsCount(): void {
@@ -236,6 +238,25 @@ export class Dashboard implements OnInit, OnDestroy {
     this.subscriptions.push(sub);
   }
 
+  private loadPendingsCount(): void {
+    const sub = this.paymentService.getDashboardPayments().subscribe({
+      next: (payments) => {
+        if (!payments || !Array.isArray(payments)) {
+          this.totalpentending || 0;
+          return;
+        }
+
+        const pendingPayments = payments.filter((payment: any) => payment.status === 'pending');
+        this.totalpentending = pendingPayments.length;
+      },
+      error: (err) => {
+        console.error('Erro ao buscar pagamentos pendentes:', err);
+        this.totalpentending = 0;
+      }
+    });
+    this.subscriptions.push(sub);
+  }
+
   private loadPaymentsData(): void {
     const sub = this.paymentService.getDashboardPayments().subscribe({
       next: (payments) => {
@@ -247,43 +268,33 @@ export class Dashboard implements OnInit, OnDestroy {
           return;
         }
 
-        const { startDate, endDate } = this.getDateRange();
+        const chartPayments = payments.filter((payment: any) =>
+          payment.status === 'paid' ||
+          payment.status === 'pending' ||
+          payment.status === 'late'
+        );
 
-        const paidAmount = payments
-          .filter(p => {
-            if (!p.paid_at) return false;
-            return this.isDateInRange(new Date(p.paid_at), startDate, endDate);
-          })
-          .length;
+        const paidCount = chartPayments.filter((payment: any) => payment.status === 'paid').length;
 
-        const pendingAmount = payments
-          .filter(p => {
-            if (p.status !== 'pending') return false;
-            if (!p.due_date) return false;
-            return this.isDateInRange(new Date(p.due_date), startDate, endDate);
-          })
-          .length;
+        const paidAmount = chartPayments
+          .filter((payment: any) => payment.status === 'paid')
+          .reduce((total: number, payment: any) => total + Number(payment.amount || 0), 0);
 
-        const lateAmount = payments
-          .filter(p => {
-            if (!p.due_date) return false;
-            const dueDate = new Date(p.due_date);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
+        const pendingAmount = chartPayments
+          .filter((payment: any) => payment.status === 'pending')
+          .reduce((total: number, payment: any) => total + Number(payment.amount || 0), 0);
 
-            return (
-              dueDate < today &&
-              p.status !== 'paid' &&
-              this.isDateInRange(dueDate, startDate, endDate)
-            );
-          })
-          .length;
+        const lateAmount = chartPayments
+          .filter((payment: any) => payment.status === 'late')
+          .reduce((total: number, payment: any) => total + Number(payment.amount || 0), 0);
 
-        this.totalPayments = paidAmount;
+          console.log(lateAmount);
+
+        this.totalPayments = paidCount;
         this.status.pending = pendingAmount;
-        this.status.paid = paidAmount;
+        this.status.paid = paidCount;
         this.status.late = lateAmount;
-        this.status.total = paidAmount + pendingAmount + lateAmount;
+        this.status.total = chartPayments.length;
 
         this.pieChartData = {
           labels: ['Pagos', 'Pendentes', 'Atrasados'],
@@ -302,9 +313,10 @@ export class Dashboard implements OnInit, OnDestroy {
 
         console.log('Dashboard: Dados atualizados', {
           paidAmount,
+          paidCount,
           pendingAmount,
           lateAmount,
-          dateRange: { startDate, endDate }
+          totalPayments: this.totalPayments
         });
       },
 
@@ -330,5 +342,10 @@ export class Dashboard implements OnInit, OnDestroy {
       { label: 'Pendentes', value: 0, color: '#f59e0b' },
       { label: 'Atrasados', value: 0, color: '#ef4444' }
     ];
+    this.totalPayments = 0;
+    this.status.pending = 0;
+    this.status.paid = 0;
+    this.status.late = 0;
+    this.status.total = 0;
   }
 }

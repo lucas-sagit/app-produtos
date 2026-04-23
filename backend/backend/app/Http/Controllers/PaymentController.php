@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Payment;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
 {
@@ -62,10 +63,22 @@ class PaymentController extends Controller
             'due_date' => 'required|date',
         ]);
 
-        $payment = Payment::create([
-            ...$validated,
-            'status' => 'pending'
-        ]);
+        $payment = null;
+
+        DB::transaction(function () use ($validated, &$payment) {
+            $payment = Payment::create([
+                ...$validated,
+                'status' => 'pending'
+            ]);
+
+            $service = $payment->service;
+
+            if ($service) {
+                $service->update([
+                    'due_date' => $validated['due_date'],
+                ]);
+            }
+        });
 
 
         return response()->json([
@@ -174,11 +187,23 @@ class PaymentController extends Controller
             'status' => 'in:pending,paid,late'
         ]);
 
-        $payment->update($validated);
+        DB::transaction(function () use ($payment, $validated) {
+            $payment->update($validated);
+
+            if (array_key_exists('due_date', $validated)) {
+                $service = $payment->service;
+
+                if ($service) {
+                    $service->update([
+                        'due_date' => $validated['due_date'],
+                    ]);
+                }
+            }
+        });
 
         return response()->json([
             'message' => 'Pagamento atualizado com sucesso!',
-            'data' => $payment
+            'data' => $payment->fresh(['service.client'])
         ]);
     }
 

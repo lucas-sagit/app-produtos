@@ -69,6 +69,7 @@ export class PaymentDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadServices();
+    this.loadServicedueDate();
   }
 
   loadServices(): void {
@@ -80,6 +81,24 @@ export class PaymentDialogComponent implements OnInit {
           const selectedService = this.services.find(s => s.id === this.form.value.service_id);
           if (selectedService && selectedService.price && !this.form.value.amount) {
             this.form.patchValue({ amount: selectedService.price }, { emitEvent: false });
+          }
+        }
+      },
+      error: (err: any) => {
+        console.error('Erro ao carregar serviços:', err);
+      }
+    });
+  }
+
+  loadServicedueDate(): void {
+    this.serviceService.getServices().subscribe({
+      next: (data: Service[]) => {
+        this.services = data;
+        // Se estiver editando e já tiver um service_id, preenche o valor do serviço
+        if (this.isEdit && this.form.value.service_id) {
+          const selectExperation = this.services.find(s => s.id === this.form.value.service_id);
+          if (selectExperation && selectExperation.due_date && !this.form.value.due_date) {
+            this.form.patchValue({ due_date: selectExperation.due_date }, { emitEvent: false });
           }
         }
       },

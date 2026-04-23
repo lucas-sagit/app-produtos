@@ -21,6 +21,7 @@ class Service extends Model
 
     protected $casts = [
         'price' => 'decimal:2',
+        'due_date' => 'date',
     ];
 
     public function client()
@@ -30,6 +31,11 @@ class Service extends Model
 
     public function payment()
     {
-        return $this->belongsTo(Payment::class);
+        return $this->hasOne(Payment::class)->latestOfMany();
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
     }
 }

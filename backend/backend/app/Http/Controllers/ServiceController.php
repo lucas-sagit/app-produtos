@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Service;
 use App\Models\Payment;
+use App\Models\Service;
 use Carbon\Carbon;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ServiceController extends Controller
 {
@@ -40,13 +40,12 @@ class ServiceController extends Controller
             'status' => 'required|in:ativo,suspenso,cancelado',
         ]);
 
-        // Calcula a data de vencimento como 30 dias após a data de início
         $startedAt = Carbon::createFromFormat('Y-m-d', $validated['started_at']);
-        $due_date = $startedAt->copy()->addDays(30);
+        $dueDate = $startedAt->copy()->addDays(30);
 
         $service = Service::create([
             'client_id' => $validated['client_id'],
-            'due_date' => $due_date->format('Y-m-d'),
+            'due_date' => $dueDate->format('Y-m-d'),
             'plans' => $validated['plans'],
             'description' => $validated['description'],
             'price' => $validated['price'],
@@ -57,7 +56,7 @@ class ServiceController extends Controller
         Payment::create([
             'service_id' => $service->id,
             'amount' => $service->price,
-            'due_date' => $due_date,
+            'due_date' => $dueDate,
             'status' => 'pending'
         ]);
 
@@ -90,27 +89,44 @@ class ServiceController extends Controller
     public function update(Request $request, string $id)
     {
         $service = Service::findOrFail($id);
+        $newDueDate = null;
 
         $validated = $request->validate([
             'plans' => 'string|max:255',
             'description' => 'string|max:255',
             'price' => 'numeric',
-            'status' => 'in:ativo, suspenso, cancelado',
+            'status' => 'in:ativo,suspenso,cancelado',
             'started_at' => 'date'
         ]);
 
-        // Recalcula o due_date se o started_at for alterado
+        // Recalcula o vencimento quando a data de início mudar.
         if (isset($validated['started_at'])) {
-            $validated['due_date'] = Carbon::createFromFormat('Y-m-d', $validated['started_at'])
+            $newDueDate = Carbon::createFromFormat('Y-m-d', $validated['started_at'])
                 ->addDays(30)
                 ->format('Y-m-d');
+
+            $validated['due_date'] = $newDueDate;
         }
 
-        $service->update($validated);
+        DB::transaction(function () use ($service, $validated, $newDueDate) {
+            $service->update($validated);
+
+            if ($newDueDate) {
+                $latestPayment = Payment::where('service_id', $service->id)
+                    ->orderByDesc('id')
+                    ->first();
+
+                if ($latestPayment) {
+                    $latestPayment->update([
+                        'due_date' => $newDueDate,
+                    ]);
+                }
+            }
+        });
 
         return response()->json([
             'message' => 'Serviço atualizado com sucesso!',
-            'data' => $service
+            'data' => $service->fresh(['client', 'payment'])
         ]);
     }
 

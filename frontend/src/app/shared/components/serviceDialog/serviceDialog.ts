@@ -82,13 +82,23 @@ export class ServiceDialogComponent implements OnInit {
   }
 
   getVencimentoPreview(): string {
+
     const startedAt = this.form.get('started_at')?.value;
-    if (!startedAt) {
-      return '';
-    }
-    const date = new Date(startedAt);
+    if (!startedAt) return '';
+
+    const [year, month, day] = startedAt.split('-').map(Number);
+
+    // Date LOCAL, sem UTC
+    const date = new Date(year, month - 1, day);
+
     date.setDate(date.getDate() + 30);
-    return date.toLocaleDateString('pt-BR');
+
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yyyy = date.getFullYear();
+
+    return `${dd}/${mm}/${yyyy}`;
+
   }
 
   close() {
