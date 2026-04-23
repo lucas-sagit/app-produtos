@@ -299,8 +299,12 @@ export class Dashboard implements OnInit, OnDestroy {
         this.pieChartData = {
           labels: ['Pagos', 'Pendentes', 'Atrasados'],
           datasets: [{
-            data: [paidAmount, pendingAmount, lateAmount],
-            backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+            data: [paidAmount, pendingAmount,
+              // lateAmount
+            ],
+            backgroundColor: ['#10b981', '#f59e0b',
+              // '#ef4444'
+            ],
             borderWidth: 0
           }]
         };
@@ -308,7 +312,7 @@ export class Dashboard implements OnInit, OnDestroy {
         this.chartLegend = [
           { label: 'Pagos', value: paidAmount, color: '#10b981' },
           { label: 'Pendentes', value: pendingAmount, color: '#f59e0b' },
-          { label: 'Atrasados', value: lateAmount, color: '#ef4444' }
+          // { label: 'Atrasados', value: lateAmount, color: '#ef4444' }
         ];
 
         console.log('Dashboard: Dados atualizados', {

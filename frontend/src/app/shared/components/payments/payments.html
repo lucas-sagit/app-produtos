@@ -51,12 +51,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let payment of pagedPayments">
+        <tr *ngFor="let payment of pagedPayments"
+        [ngClass]="(getLateClass(payment))">
           <td>{{ payment.id }}</td>
           <td>{{ payment.service?.client?.name }}</td>
           <td>{{ payment.service?.plans }}</td>
           <td>{{ payment.amount | currency:'BRL' }}</td>
-          <td>{{ payment.due_date | date:'dd/MM/yyyy':'UTC' }}</td>
+          <td >
+            {{ payment.due_date | date:'dd/MM/yyyy':'UTC' }}</td>
           <td>
             Último pagamento:
             {{ payment.last_paid_at ? (payment.last_paid_at | date:'dd/MM/yyyy HH:mm') : '-' }}

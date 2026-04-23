@@ -239,4 +239,34 @@ export class PaymentsComponent implements OnInit {
   getStatusClass(status: string): string {
     return `status-${status}`;
   }
+
+
+  getLateDays(payment: any): number {
+    if (!payment?.due_date || payment.status === 'paid') return 0;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const dueDate = new Date(payment.due_date);
+    dueDate.setHours(0, 0, 0, 0);
+
+    const diffTime = today.getTime() - dueDate.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    return diffDays > 0 ? diffDays : 0;
+  }
+
+  getLateClass(payment: any): string {
+    const lateDays = this.getLateDays(payment);
+
+    if (lateDays > 10) {
+      return 'late-red';
+    }
+
+    if (lateDays > 0) {
+      return 'late-orange';
+    }
+
+    return '';
+  }
 }
