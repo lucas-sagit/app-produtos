@@ -24,8 +24,9 @@ export class OpenNotificationComponent {
 
   getDueDate(payment: any): string {
     if (!payment?.due_date) return '';
+    const [year, month, day] = payment.due_date.split('-');
     const date = new Date(payment.due_date);
-    return date.toLocaleDateString('pt-BR');
+    return date.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
   }
 
   getDaysLate(payment: any): number {
