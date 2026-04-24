@@ -203,3 +203,13 @@
 .paginator ::ng-deep .mat-mdc-paginator-page-size-label {
   margin-right: 12px;
 }
+
+.late-orange td {
+  background-color: #f59e0b;
+  color: #ffffff;
+}
+
+.late-red td {
+  background-color: #dc2626;
+  color: #ffffff;
+}

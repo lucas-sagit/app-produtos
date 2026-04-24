@@ -38,7 +38,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let service of pagedServices">
+        <tr *ngFor="let service of pagedServices"
+        [ngClass]="getLateClass(service)">
           <td>{{ service.id }}</td>
           <td>{{ service.client?.name }}</td>
           <td>{{ service.plans }}</td>

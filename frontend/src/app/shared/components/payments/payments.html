@@ -48,8 +48,13 @@
           <th>Pago em</th>
           <th>Status</th>
           <th>Ações</th>
+          <button
+          (click)="downloadCsv()" class="csv"> Exportar CSV
+            <mat-icon>file_download</mat-icon>
+          </button>
         </tr>
       </thead>
+
       <tbody>
         <tr *ngFor="let payment of pagedPayments"
         [ngClass]="(getLateClass(payment))">

@@ -269,4 +269,27 @@ export class PaymentsComponent implements OnInit {
 
     return '';
   }
+
+  downloadCsv() {
+    const headers = ['ID', 'Cliente', 'Plano', 'Valor', 'Vencimento', 'Pago em', 'Status'];
+    const rows = this.filteredPayments.map(payment => [
+      payment.id,
+      payment.service?.client?.name || '',
+      payment.service?.plans || '',
+      payment.amount,
+      payment.due_date,
+      payment.paid_at || '',
+      this.getStatusLabel(payment.status)
+    ]);
+
+    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "pagamentos.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
 }

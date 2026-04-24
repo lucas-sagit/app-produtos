@@ -210,6 +210,21 @@
   border-bottom: none;
 }
 
+.csv mat-icon{
+  text-align: center;
+}
+
+.csv{
+    border-radius: 2%;
+    border: none;
+    position: absolute;
+    right: 36px;
+    cursor: pointer;
+    background: unset;
+    margin-top: 10px;
+    text-align: center;
+}
+
 /* Status badges */
 .status-pending,
 .status-paid,
