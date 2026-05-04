@@ -34,6 +34,9 @@
           <th>Início</th>
           <th>Vencimento</th>
           <th>Status</th>
+          <th>Equipamento</th>
+          <th>Lote</th>
+          <th>Quantidade</th>
           <th>Ações</th>
         </tr>
       </thead>
@@ -52,6 +55,9 @@
               {{ getStatusLabel(service.status) }}
             </span>
           </td>
+          <td>{{ service.equipment_description || '-' }}</td>
+          <td>{{ service.equipment_lote || '-' }}</td>
+          <td>{{ service.equipment_quantity ?? '-' }}</td>
           <td>
             <button
               class="btn-action btn-edit"

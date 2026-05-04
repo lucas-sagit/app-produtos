@@ -1,6 +1,6 @@
 .dialog-container {
   padding: 24px;
-  min-width: 400px;
+  width: min(720px, 90%);
 }
 
 .dialog-container h2 {
@@ -12,18 +12,28 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 .full-width {
   width: 100%;
 }
 
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.form-grid .span-2 {
+  grid-column: span 2;
+}
+
 .actions {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  margin-top: 16px;
+  margin-top: 4px;
 }
 
 .info-vencimento {
@@ -41,4 +51,71 @@
 
 .info-vencimento strong {
   color: #007bff;
+}
+
+.stock-section {
+  padding: 18px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.04);
+}
+
+.stock-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stock-header h3 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  color: #1e293b;
+}
+
+.stock-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.stock-badge {
+  flex-shrink: 0;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #e0f2fe;
+  color: #075985;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.stock-grid {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr 0.8fr;
+  gap: 16px;
+}
+
+.quantity-field {
+  min-width: 0;
+}
+
+@media (max-width: 860px) {
+  .dialog-container {
+    width: 100%;
+  }
+
+  .form-grid,
+  .stock-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid .span-2 {
+    grid-column: span 1;
+  }
+
+  .stock-header {
+    flex-direction: column;
+  }
 }

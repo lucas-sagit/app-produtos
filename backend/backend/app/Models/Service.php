@@ -14,6 +14,9 @@ class Service extends Model
         'due_date',
         'plans',
         'description',
+        'equipment_description',
+        'equipment_lote',
+        'equipment_quantity',
         'price',
         'status',
         'started_at'
@@ -22,6 +25,7 @@ class Service extends Model
     protected $casts = [
         'price' => 'decimal:2',
         'due_date' => 'date',
+        'equipment_quantity' => 'integer',
     ];
 
     public function client()

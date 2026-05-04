@@ -1,74 +1,126 @@
 <div class="dialog-container">
-  <h2>{{ isEdit ? 'Editar Serviço' : 'Novo Serviço' }}</h2>
+  <h2>{{ isEdit ? 'Editar Servico' : 'Novo Servico' }}</h2>
 
   <form [formGroup]="form" class="form">
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Cliente</mat-label>
-      <mat-select formControlName="client_id">
-        <mat-option *ngFor="let client of clients" [value]="client.id">
-          {{ client.name }}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="form.get('client_id')?.hasError('required')">
-        Cliente é obrigatório
-      </mat-error>
-    </mat-form-field>
+    <div class="form-grid">
+      <mat-form-field appearance="outline" class="span-2">
+        <mat-label>Cliente</mat-label>
+        <mat-select formControlName="client_id">
+          <mat-option *ngFor="let client of clients" [value]="client.id">
+            {{ client.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('client_id')?.hasError('required')">
+          Cliente e obrigatorio
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Plano</mat-label>
-      <mat-select formControlName="plans">
-        <mat-option *ngFor="let plan of plansOptions" [value]="plan.value">
-          {{ plan.label }}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="form.get('plans')?.hasError('required')">
-        Plano é obrigatório
-      </mat-error>
-    </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Plano</mat-label>
+        <mat-select formControlName="plans">
+          <mat-option *ngFor="let plan of plansOptions" [value]="plan.value">
+            {{ plan.label }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('plans')?.hasError('required')">
+          Plano e obrigatorio
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Descrição</mat-label>
-      <input matInput formControlName="description" placeholder="Ex: Desenvolvimento de software" />
-      <mat-error *ngIf="form.get('description')?.hasError('required')">
-        Descrição é obrigatória
-      </mat-error>
-    </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option *ngFor="let status of statusOptions" [value]="status.value">
+            {{ status.label }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('status')?.hasError('required')">
+          Status e obrigatorio
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Preço (R$)</mat-label>
-      <input matInput formControlName="price" type="number" step="0.01" placeholder="0,00" />
-      <mat-error *ngIf="form.get('price')?.hasError('required')">
-        Preço é obrigatório
-      </mat-error>
-      <mat-error *ngIf="form.get('price')?.hasError('min')">
-        Preço deve ser maior ou igual a zero
-      </mat-error>
-    </mat-form-field>
+      <mat-form-field appearance="outline" class="span-2">
+        <mat-label>Descricao</mat-label>
+        <input matInput formControlName="description" placeholder="Ex: Desenvolvimento de software" />
+        <mat-error *ngIf="form.get('description')?.hasError('required')">
+          Descricao e obrigatoria
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Data de Início</mat-label>
-      <input matInput formControlName="started_at" type="date" />
-      <mat-error *ngIf="form.get('started_at')?.hasError('required')">
-        Data de início é obrigatória
-      </mat-error>
-    </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Preco (R$)</mat-label>
+        <input matInput formControlName="price" type="number" step="0.01" placeholder="0,00" />
+        <mat-error *ngIf="form.get('price')?.hasError('required')">
+          Preco e obrigatorio
+        </mat-error>
+        <mat-error *ngIf="form.get('price')?.hasError('min')">
+          Preco deve ser maior ou igual a zero
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Data de Inicio</mat-label>
+        <input matInput formControlName="started_at" type="date" />
+        <mat-error *ngIf="form.get('started_at')?.hasError('required')">
+          Data de inicio e obrigatoria
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <section class="stock-section">
+      <div class="stock-header">
+        <div>
+          <h3>Baixa de estoque</h3>
+          <p>Opcional. Selecione o equipamento do estoque para dar baixa automaticamente.</p>
+        </div>
+        <span class="stock-badge" *ngIf="selectedEquipmentProduct">
+          {{ selectedEquipmentProduct.quantity }} em estoque
+        </span>
+      </div>
+
+      <div class="stock-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Descricao do equipamento</mat-label>
+          <mat-select
+            formControlName="equipment_description"
+            (selectionChange)="onEquipmentDescriptionChange()">
+            <mat-option value="">Selecione</mat-option>
+            <mat-option *ngFor="let description of equipmentDescriptionOptions" [value]="description">
+              {{ description }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Lote do equipamento</mat-label>
+          <mat-select
+            formControlName="equipment_lote"
+            (selectionChange)="onEquipmentLoteChange()"
+            [disabled]="!form.get('equipment_description')?.value">
+            <mat-option value="">Selecione</mat-option>
+            <mat-option *ngFor="let product of equipmentLoteOptions" [value]="product.lote">
+              {{ product.lote }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="quantity-field">
+          <mat-label>Quantidade do equipamento</mat-label>
+          <mat-select
+            formControlName="equipment_quantity"
+            [disabled]="!selectedEquipmentProduct">
+            <mat-option value="">Selecione</mat-option>
+            <mat-option *ngFor="let quantity of equipmentQuantityOptions" [value]="quantity">
+              {{ quantity }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </section>
 
     <div class="info-vencimento" *ngIf="form.get('started_at')?.value">
       <p><strong>Vencimento:</strong> {{ getVencimentoPreview() }}</p>
     </div>
-
-
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Status</mat-label>
-      <mat-select formControlName="status">
-        <mat-option *ngFor="let status of statusOptions" [value]="status.value">
-          {{ status.label }}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="form.get('status')?.hasError('required')">
-        Status é obrigatório
-      </mat-error>
-    </mat-form-field>
 
     <div class="actions">
       <button mat-button type="button" (click)="close()">Cancelar</button>
