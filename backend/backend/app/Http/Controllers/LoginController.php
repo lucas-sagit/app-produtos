@@ -53,4 +53,9 @@ class LoginController extends Controller
             'token' => $token
         ]);
     }
+
+    public function user(Request $request)
+    {
+        return response()->json($request->user());
+    }
 }

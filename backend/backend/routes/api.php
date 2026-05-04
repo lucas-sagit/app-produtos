@@ -26,3 +26,4 @@ Route::post('payments/mark-late', [PaymentController::class, 'markLate']);
 
 Route::apiResource('payments', PaymentController::class);
 Route::post('/login', [LoginController::class, 'authentication']);
+Route::middleware('auth:sanctum')->get('/login/user', [LoginController::class, 'user']);
