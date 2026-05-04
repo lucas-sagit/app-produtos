@@ -38,7 +38,7 @@
       </thead>
       <tbody>
 
-        <tr *ngFor="let client of pagedClients">
+        <tr *ngFor="let client of pagedClients" [class.line-through-row]="!client.status_client">
           <td>{{ client.id }}</td>
 
           <td>

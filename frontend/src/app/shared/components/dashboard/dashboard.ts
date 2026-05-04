@@ -10,7 +10,6 @@ import { MatIcon } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,6 +18,8 @@ import { Chart, registerables } from 'chart.js';
 import { BaseChartDirective } from '../../directives/base-chart.directive';
 import { Subscription } from 'rxjs';
 import { DateComponent } from '../date/date';
+import { Auth } from '../../../services/auth.service';
+import { LoginService } from '../../services/login/login';
 
 
 Chart.register(...registerables);
@@ -46,6 +47,10 @@ Chart.register(...registerables);
 
 })
 export class Dashboard implements OnInit, OnDestroy {
+
+  user = { name: '' };
+  userInitial = 'U';
+
   totalClients = 0;
   totalPayments = 0;
   totalpentending = 0;
@@ -63,7 +68,7 @@ export class Dashboard implements OnInit, OnDestroy {
   };
 
   // Filtro por data
-  // selectedDate: Date | null = null;
+  selectedDate: Date | null = null;
   dateFilter: any = null;
   allPayments: any[] = [];
   isFiltered = false;
@@ -96,17 +101,40 @@ export class Dashboard implements OnInit, OnDestroy {
     private paymentService: PaymentService,
     private serviceService: ServiceService,
     private productsService: ProductsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private auth: Auth,
+    private loginService: LoginService
   ) { }
 
   ngOnInit(): void {
     this.loadNotifications();
     this.loadAllFilteredData();
+    this.loadLoggedUser();
   }
 
   logout(): void {
-    localStorage.removeItem('authToken');
+    this.auth.logout();
     window.location.href = '/login';
+  }
+
+  private loadLoggedUser(): void {
+    const sub = this.loginService.getUser().subscribe({
+      next: (user) => {
+        this.user.name = user?.name || 'Usuário';
+        this.userInitial = this.getUserInitial(this.user.name);
+      },
+      error: (err) => {
+        console.error('Erro ao carregar usuário logado:', err);
+        this.user.name = 'Usuário';
+        this.userInitial = 'U';
+      }
+    });
+    this.subscriptions.push(sub);
+  }
+
+  private getUserInitial(name: string): string {
+    const trimmed = (name || '').trim();
+    return trimmed ? trimmed.charAt(0).toUpperCase() : 'U';
   }
 
   ngOnDestroy(): void {
@@ -117,7 +145,6 @@ export class Dashboard implements OnInit, OnDestroy {
     console.log('Filtro recebido:', filter);
     this.dateFilter = filter;
     this.isFiltered = true;
-
     this.loadAllFilteredData();
   }
 

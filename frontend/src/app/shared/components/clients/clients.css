@@ -92,7 +92,7 @@
 }
 
 .table th {
-  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  background: #385575;
   color: white;
   font-weight: 600;
   text-transform: uppercase;
@@ -131,6 +131,11 @@
 .inactive {
   color: red;
   font-weight: bold;
+}
+
+.line-through-row td {
+  text-decoration: line-through;
+  color: #888; /* Opcional: deixa a linha toda cinza */
 }
 
 .btn-edit {

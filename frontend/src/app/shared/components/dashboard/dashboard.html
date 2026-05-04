@@ -1,24 +1,41 @@
 <div class="app-container">
   <aside class="sidebar">
-    <h2>App</h2>
-    <nav>
+    <div class="sidebar-brand">
+      <h2>App</h2>
+    </div>
+
+    <nav class="sidebar-nav">
       <ul>
         <li><a routerLink="/clientes" routerLinkActive="active">Clientes</a></li>
         <li><a routerLink="/pagamentos" routerLinkActive="active">Pagamentos</a></li>
-        <li><a routerLink="/servicos" routerLinkActive="active">Serviços</a></li>
+        <li><a routerLink="/servicos" routerLinkActive="active">Servicos</a></li>
         <li><a routerLink="/products" routerLinkActive="active">Produtos</a></li>
         <li><a routerLink="/list" routerLinkActive="active">Estoque</a></li>
       </ul>
     </nav>
-    <button (click)="logout()" class="logout">
-      <mat-icon>logout</mat-icon>
-    </button>
+
+    <div class="sidebar-footer">
+      <div class="profile-card">
+        <div class="profile-avatar">{{ userInitial }}</div>
+        <div class="name-login">
+          <span>Usuario logado</span>
+          <p>{{ user.name }}</p>
+        </div>
+      </div>
+
+      <button (click)="logout()" class="logout" type="button">
+        <mat-icon>logout</mat-icon>
+        <span>Sair da conta</span>
+      </button>
+    </div>
   </aside>
+
   <main class="main-content">
     <div class="dashboard-header">
-      <p>Visão geral do sistema</p>
+      <p>Visao geral do sistema</p>
 
       <div class="notification">
+
         <app-date>(selectedDate="onDatesChange($event)")</app-date>
 
         <button mat-icon-button (click)="openNotifications()">
@@ -33,8 +50,6 @@
     </div>
 
     <div class="dashboard-grid">
-
-      <!-- CLIENTES -->
       <div class="card card-clients">
         <div class="card-icon">👥</div>
         <div class="card-content">
@@ -43,16 +58,14 @@
         </div>
       </div>
 
-      <!-- SERVIÇOS -->
       <div class="card card-services">
         <div class="card-icon">🛠️</div>
         <div class="card-content">
-          <h3>Serviços</h3>
+          <h3>Servicos</h3>
           <p class="total">{{ totalServices }}</p>
         </div>
       </div>
 
-      <!-- PAGAMENTOS -->
       <div class="card card-payments">
         <div class="card-icon">💳</div>
         <div class="card-content">
@@ -61,7 +74,6 @@
         </div>
       </div>
 
-      <!-- PENDENTES -->
       <div class="card card-pending">
         <div class="card-icon">⏳</div>
         <div class="card-content">
@@ -71,17 +83,19 @@
       </div>
     </div>
 
-    <!-- Gráfico de Pizza -->
     <div class="chart-container">
-      <h3>
-        Resumo
+      <h3>Resumo</h3>
 
-      </h3>
       <div class="chart-wrapper">
-        <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [chartType]="pieChartType"
-          style="max-height: 300px;">
-        </canvas>
+        <canvas
+          baseChart
+          [data]="pieChartData"
+          [options]="pieChartOptions"
+          [chartType]="pieChartType"
+          style="max-height: 300px;"
+        ></canvas>
       </div>
+
       <div class="chart-legend">
         <div class="legend-item" *ngFor="let item of chartLegend">
           <span class="legend-color" [style.background-color]="item.color"></span>
@@ -90,6 +104,5 @@
         </div>
       </div>
     </div>
-
   </main>
 </div>

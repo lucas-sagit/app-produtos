@@ -48,10 +48,10 @@
           <th>Pago em</th>
           <th>Status</th>
           <th>Ações</th>
-          <button
+          <!-- <button
           (click)="downloadCsv()" class="csv"> Exportar CSV
             <mat-icon>file_download</mat-icon>
-          </button>
+          </button> -->
         </tr>
       </thead>
 
@@ -74,10 +74,12 @@
             </span>
           </td>
           <td>
-            <button class="btn-action" (click)="openHistory(payment.service?.id)" title="Histórico">
-              <mat-icon>history</mat-icon>
-            </button>
-            <button *ngIf="payment.status !== 'paid'" class="btn-action btn-pay" (click)="pay(payment.id)"
+            <div class="option">
+
+              <button class="btn-action" (click)="openHistory(payment.service?.id)" title="Histórico">
+                <mat-icon>history</mat-icon>
+              </button>
+              <button *ngIf="payment.status !== 'paid'" class="btn-action btn-pay" (click)="pay(payment.id)"
               title="Pagar">
               <mat-icon>check_circle</mat-icon>
             </button>
@@ -87,6 +89,7 @@
             <button class="btn-action btn-delete" (click)="deletePayment(payment)" title="Excluir">
               <mat-icon>delete</mat-icon>
             </button>
+          </div>
           </td>
         </tr>
       </tbody>
