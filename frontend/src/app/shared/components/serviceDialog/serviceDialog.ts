@@ -29,6 +29,14 @@ export class ServiceDialogComponent implements OnInit {
   isEdit = false;
   clients: Client[] = [];
 
+  // equipamento quem vem da api
+  equipamentoOptions = [
+    { value: 'roteador', label: 'Roteador' },
+    { value: 'switch', label: 'Switch' },
+    { value: 'servidor', label: 'Servidor' },
+    { value: 'notebook', label: 'Notebook' }
+  ];
+
   plansOptions = [
     { value: 'basico', label: 'Básico' },
     { value: 'padrao', label: 'Padrão' },
